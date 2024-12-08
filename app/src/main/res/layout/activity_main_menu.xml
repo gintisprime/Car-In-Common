@@ -1,0 +1,126 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Add a toolbar at the top -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!-- Placeholder for account info in upper left -->
+    <TextView
+        android:id="@+id/accountInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MENU"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textSize="18sp"
+        android:padding="16dp" />
+
+    <!-- Car details layout (Initially hidden) -->
+    <LinearLayout
+        android:id="@+id/carDetailsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_below="@id/accountInfo"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp">
+
+    <TextView
+        android:id="@+id/carRegistration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Αριθμός πινακίδας: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/carBrand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Μάρκα: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/carModel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Μοντέλο: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/carColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Χρώμα: "
+        android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/buttonMessages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Messages"
+            android:layout_below="@id/carDetailsLayout"
+            android:layout_above="@id/buttonSignOut" />
+
+
+        <Button
+            android:id="@+id/buttonSignOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Out"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal" />
+</LinearLayout>
+
+
+        <TextView
+            android:id="@+id/menuTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/buttonLogin"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="64dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="-48dp"
+            android:text="Welcome!"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+    <!-- Login & Sign Up buttons (Visible by default) -->
+        <Button
+            android:id="@+id/buttonLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="64dp"
+            android:text="Login" />
+
+<Button
+android:id="@+id/buttonSignUp"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Sign Up"
+android:layout_below="@id/buttonLogin"
+android:layout_marginTop="8dp"
+android:layout_centerHorizontal="true" />
+
+
+    </RelativeLayout>
+
+    </LinearLayout>
