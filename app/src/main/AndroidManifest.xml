@@ -28,6 +28,7 @@
         </activity>
 
         <!-- Other Activities -->
+        <activity android:name=".MapsActivity" />
         <activity android:name=".CarDetailsActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".LoginActivity" />

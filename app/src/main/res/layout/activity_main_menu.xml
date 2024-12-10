@@ -1,126 +1,140 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background">
 
-    <!-- Add a toolbar at the top -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
-
+    <!-- App Bar -->
     <RelativeLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <!-- Placeholder for account info in upper left -->
-    <TextView
-        android:id="@+id/accountInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MENU"
-        android:visibility="gone"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:textSize="18sp"
-        android:padding="16dp" />
-
-    <!-- Car details layout (Initially hidden) -->
-    <LinearLayout
-        android:id="@+id/carDetailsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_below="@id/accountInfo"
-        android:layout_centerHorizontal="true"
-        android:padding="16dp">
-
-    <TextView
-        android:id="@+id/carRegistration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Αριθμός πινακίδας: "
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/carBrand"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Μάρκα: "
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/carModel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Μοντέλο: "
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/carColor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Χρώμα: "
-        android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/buttonMessages"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Messages"
-            android:layout_below="@id/carDetailsLayout"
-            android:layout_above="@id/buttonSignOut" />
-
-
-        <Button
-            android:id="@+id/buttonSignOut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign Out"
-            android:layout_marginTop="16dp"
-            android:layout_gravity="center_horizontal" />
-</LinearLayout>
-
+        android:layout_height="56dp"
+        android:background="@color/gradient_top"
+        android:paddingHorizontal="16dp"
+        android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/menuTitle"
+            android:id="@+id/pageTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/buttonLogin"
-            android:layout_alignParentStart="true"
+            android:text="Αρχική"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/accountIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_account_circle"
             android:layout_alignParentEnd="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="64dp"
-            android:layout_marginEnd="64dp"
-            android:layout_marginBottom="-48dp"
-            android:text="Welcome!"
-            android:textSize="36sp"
-            android:textStyle="bold" />
-
-    <!-- Login & Sign Up buttons (Visible by default) -->
-        <Button
-            android:id="@+id/buttonLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="64dp"
-            android:text="Login" />
-
-<Button
-android:id="@+id/buttonSignUp"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Sign Up"
-android:layout_below="@id/buttonLogin"
-android:layout_marginTop="8dp"
-android:layout_centerHorizontal="true" />
-
-
+            app:tint="@android:color/white" />
     </RelativeLayout>
 
+    <!-- Car Details Section -->
+    <RelativeLayout
+        android:id="@+id/carDetailsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBar"
+        android:background="@color/background"
+        android:elevation="4dp"
+        android:padding="16dp">
+
+        <!-- Car Details -->
+        <TextView
+            android:id="@+id/carTeamName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ομάδα: Placeholder"
+            android:textSize="16sp"
+            android:textColor="@color/text_color"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/carModel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Μοντέλο: Placeholder"
+            android:textSize="16sp"
+            android:textColor="@color/text_color"
+            android:layout_below="@id/carTeamName"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/carPlate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Αριθμός Πινακίδας: Placeholder"
+            android:textSize="16sp"
+            android:textColor="@color/text_color"
+            android:layout_below="@id/carModel"
+            android:layout_marginBottom="8dp" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/fuelIndicator"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/carDetailsContainer"
+        android:layout_centerHorizontal="true"
+        android:progressDrawable="@drawable/custom_progress_bar"
+        android:max="100"
+        android:progress="50" /> <!-- Example initial progress -->
+
+
+    <!-- Navigation Buttons -->
+    <LinearLayout
+        android:id="@+id/navigationButtons"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gradient_top"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <ImageView
+            android:id="@+id/navHome"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_home"
+            android:layout_marginHorizontal="16dp"
+            app:tint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/navCalendar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_calendar"
+            android:layout_marginHorizontal="16dp"
+            app:tint="@android:color/white" />
+
+
+        <!-- Maps Icon -->
+        <ImageView
+            android:id="@+id/navMaps"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_maps"
+            android:layout_marginHorizontal="16dp"
+            app:tint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/navTransactions"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_transactions"
+            android:layout_marginHorizontal="16dp"
+            app:tint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/navChat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_chat"
+            android:layout_marginHorizontal="16dp"
+            app:tint="@android:color/white" />
     </LinearLayout>
+</RelativeLayout>

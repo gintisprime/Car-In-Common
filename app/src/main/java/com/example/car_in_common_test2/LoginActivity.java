@@ -56,16 +56,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
     // Method to log in the user using email
     private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "Login successful.", Toast.LENGTH_SHORT).show();
-                        // After successful login, navigate to MainMenuActivity
-                        startActivity(new Intent(LoginActivity.this, MainMenuActivity.class));
-                        finish();  // Close LoginActivity
+                        // Redirect to MainMenuActivity
+                        Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
+                        startActivity(intent);
+                        finish(); // Close LoginActivity
                     } else {
                         String errorMessage = "Authentication failed.";
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
