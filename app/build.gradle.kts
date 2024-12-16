@@ -35,10 +35,21 @@ android {
 }
 
 dependencies {
+
+    implementation(files("src/main/libs/obd-java-api-1.1-SNAPSHOT.jar"))
+
+
+
+
+
+
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
 
     implementation(libs.appcompat)
+
+    implementation ("com.google.android.gms:play-services-maps:18.0.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
