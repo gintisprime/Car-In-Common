@@ -7,27 +7,34 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
     private EditText emailEditText, passwordEditText;
+    private Button loginButton, forgotPasswordButton;
+    private DatabaseReference mDatabase; // Reference to the Firebase Realtime Database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+        // Initialize Firebase Database
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
+        // Initialize UI components
         emailEditText = findViewById(R.id.editTextEmail);
         passwordEditText = findViewById(R.id.editTextPassword);
-        Button loginButton = findViewById(R.id.buttonLogin);
-        Button forgotPasswordButton = findViewById(R.id.buttonForgotPassword);
+        loginButton = findViewById(R.id.buttonLogin);
+        forgotPasswordButton = findViewById(R.id.buttonForgotPassword);
 
         // Login button click event
         loginButton.setOnClickListener(v -> {
@@ -39,54 +46,48 @@ public class LoginActivity extends AppCompatActivity {
             } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(LoginActivity.this, "Please enter a valid email.", Toast.LENGTH_SHORT).show();
             } else {
-                loginUser(email, password);
+                validateLogin(email, password); // Validate credentials manually
             }
         });
 
-        // Forgot Password button click event
+        // Forgot Password (Disabled for manual login without Firebase Auth)
         forgotPasswordButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            if (TextUtils.isEmpty(email)) {
-                Toast.makeText(LoginActivity.this, "Please enter your email to reset the password.", Toast.LENGTH_SHORT).show();
-            } else if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                resetPassword(email);  // Reset password via email
-            } else {
-                Toast.makeText(LoginActivity.this, "Please enter a valid email for password reset.", Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(LoginActivity.this, "Password reset is disabled in manual login mode.", Toast.LENGTH_SHORT).show();
         });
     }
 
-    // Method to log in the user using email
-    private void loginUser(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, "Login successful.", Toast.LENGTH_SHORT).show();
-                        // Redirect to MainMenuActivity
+    // Manual login validation method
+    private void validateLogin(String email, String password) {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isUserFound = false;
+
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    String dbEmail = userSnapshot.child("email").getValue(String.class);
+                    String dbPassword = userSnapshot.child("password").getValue(String.class);
+
+                    if (dbEmail != null && dbPassword != null && dbEmail.equals(email) && dbPassword.equals(password)) {
+                        isUserFound = true;
+                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+
+                        // Navigate to MainMenuActivity
                         Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
                         startActivity(intent);
-                        finish(); // Close LoginActivity
-                    } else {
-                        String errorMessage = "Authentication failed.";
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            errorMessage = "Incorrect password.";
-                        } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                            errorMessage = "No account with this email found.";
-                        }
-                        Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        finish();
+                        break;
                     }
-                });
-    }
+                }
 
-    // Method to send a password reset email
-    private void resetPassword(String email) {
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, "Password reset email sent.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Failed to send reset email.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if (!isUserFound) {
+                    Toast.makeText(LoginActivity.this, "Invalid email or password.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(LoginActivity.this, "Database Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

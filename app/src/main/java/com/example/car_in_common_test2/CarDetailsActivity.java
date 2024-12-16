@@ -1,154 +1,169 @@
 package com.example.car_in_common_test2;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class CarDetailsActivity extends AppCompatActivity {
 
-    private static final int STORAGE_PERMISSION_CODE = 1001;
     private EditText teamNameEditText, carModelEditText, carPlateEditText;
-    private ImageView profileImageView;
-    private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
+    private Button submitButton, chooseExistingCarButton;
 
-    // Activity result launcher for picking an image
-    private final ActivityResultLauncher<Intent> pickImageLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri imageUri = result.getData().getData();
-                    profileImageView.setImageURI(imageUri);  // Set the selected image to the ImageView
-                }
-            });
+    private DatabaseReference mCarDatabase, mUserDatabase;
+    private ArrayList<String> carList;
+    private HashMap<String, String> carIdMap; // Map to store car display name -> carId
+
+    private String currentUserId, selectedCarId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_details);
 
-        // Initialize Firebase Auth and Database reference
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        // Initialize Firebase references
+        mCarDatabase = FirebaseDatabase.getInstance().getReference("cars");
+        mUserDatabase = FirebaseDatabase.getInstance().getReference("users");
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        profileImageView = findViewById(R.id.imageViewProfilePicture);
+        // Initialize UI components
         teamNameEditText = findViewById(R.id.editTextTeamName);
         carModelEditText = findViewById(R.id.editTextCarModel);
         carPlateEditText = findViewById(R.id.editTextCarPlate);
-        Button submitButton = findViewById(R.id.buttonSubmitCarDetails);
+        submitButton = findViewById(R.id.buttonSubmitCarDetails);
+        chooseExistingCarButton = findViewById(R.id.buttonChooseExistingCar);
 
-        // Handle profile picture upload
-        Button uploadPictureButton = findViewById(R.id.buttonUploadPicture);
-        uploadPictureButton.setOnClickListener(v -> {
-            if (isStoragePermissionGranted()) {
-                openImagePicker();
-            } else {
-                requestStoragePermission();
-            }
-        });
+        carList = new ArrayList<>();
+        carIdMap = new HashMap<>();
+        selectedCarId = null; // Initially null
 
-        // Handle form submission
-        submitButton.setOnClickListener(v -> {
-            String teamName = teamNameEditText.getText().toString().trim();
-            String carModel = carModelEditText.getText().toString().trim();
-            String carPlate = carPlateEditText.getText().toString().trim();
-
-            if (TextUtils.isEmpty(teamName) || TextUtils.isEmpty(carModel) || TextUtils.isEmpty(carPlate)) {
-                Toast.makeText(CarDetailsActivity.this, "Please enter all details.", Toast.LENGTH_SHORT).show();
-            } else {
-                saveCarDetailsToDatabase(teamName, carModel, carPlate);
-            }
-        });
+        // Button listeners
+        submitButton.setOnClickListener(v -> saveCarDetails());
+        chooseExistingCarButton.setOnClickListener(v -> showCarSelectionDialog());
     }
 
-    // Check if storage permission is granted
-    private boolean isStoragePermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-    }
+    private void saveCarDetails() {
+        String teamName = teamNameEditText.getText().toString().trim();
+        String carModel = carModelEditText.getText().toString().trim();
+        String carPlate = carPlateEditText.getText().toString().trim();
 
-    // Request storage permission
-    private void requestStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission is needed to upload a profile picture.", Toast.LENGTH_SHORT).show();
+        if (teamName.isEmpty() || carModel.isEmpty() || carPlate.isEmpty()) {
+            Toast.makeText(this, "Please fill out all fields.", Toast.LENGTH_SHORT).show();
+            return;
         }
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-    }
 
-    // Handle the result of the permission request
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission granted!", Toast.LENGTH_SHORT).show();
-                openImagePicker();
-            } else {
-                Toast.makeText(this, "Permission denied. Cannot upload image.", Toast.LENGTH_SHORT).show();
+        if (selectedCarId != null) {
+            // If an existing car is selected, link it to the user
+            linkCarToUser(selectedCarId);
+        } else {
+            // Save data to the global cars node if no existing car is selected
+            String carId = mCarDatabase.push().getKey();
+            if (carId != null) {
+                CarDetails carDetails = new CarDetails(teamName, carModel, carPlate);
+                mCarDatabase.child(carId).setValue(carDetails)
+                        .addOnSuccessListener(aVoid -> {
+                            linkCarToUser(carId);
+                            Toast.makeText(this, "Car details saved.", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(this, "Failed to save car details.", Toast.LENGTH_SHORT).show());
             }
         }
     }
 
-    // Open the image picker
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickImageLauncher.launch(intent);
+    private void linkCarToUser(String carId) {
+        // Link the car ID to the current user
+        mUserDatabase.child(currentUserId).child("selectedCarId").setValue(carId)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Car assigned successfully.", Toast.LENGTH_SHORT).show();
+                    // Navigate to MainMenuActivity
+                    Intent intent = new Intent(CarDetailsActivity.this, MainMenuActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Failed to assign car to user.", Toast.LENGTH_SHORT).show());
     }
 
-    private void saveCarDetailsToDatabase(String teamName, String carModel, String carPlate) {
-        String userId = mAuth.getCurrentUser().getUid();  // Get the current user's UID
+    private void showCarSelectionDialog() {
+        mCarDatabase.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                carList.clear();
+                carIdMap.clear();
 
-        // Create a new car object
-        Car car = new Car(teamName, carModel, carPlate);
+                for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                    String carId = snapshot.getKey(); // Get the existing car ID
+                    CarDetails car = snapshot.getValue(CarDetails.class);
 
-        // Save car details under the user's record in the database
-        mDatabase.child("users").child(userId).child("carDetails").setValue(car)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(CarDetailsActivity.this, "Car details saved successfully!", Toast.LENGTH_SHORT).show();
+                    if (car != null) {
+                        String displayName = car.teamName + " - " + car.carModel + " - " + car.carPlate;
+                        carList.add(displayName);
+                        carIdMap.put(displayName, carId); // Map display name to car ID
+                    }
+                }
 
-                        // Save car details in SharedPreferences
-                        SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("team_name", teamName);
-                        editor.putString("car_model", carModel);
-                        editor.putString("car_plate", carPlate);
-                        editor.apply();
+                if (carList.isEmpty()) {
+                    Toast.makeText(this, "No cars available.", Toast.LENGTH_SHORT).show();
+                } else {
+                    showCarDialog();
+                }
+            } else {
+                Toast.makeText(this, "Failed to fetch car details.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-                        // Redirect to MainMenuActivity
-                        Intent intent = new Intent(CarDetailsActivity.this, MainMenuActivity.class);
-                        startActivity(intent);
-                        finish();
+    private void showCarDialog() {
+        String[] carArray = carList.toArray(new String[0]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a Car");
+        builder.setItems(carArray, (dialog, which) -> {
+            String selectedCar = carArray[which];
+            selectedCarId = carIdMap.get(selectedCar); // Retrieve the car ID
+
+            if (selectedCarId != null) {
+                // Fetch car details and populate the fields
+                mCarDatabase.child(selectedCarId).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        CarDetails car = task.getResult().getValue(CarDetails.class);
+                        if (car != null) {
+                            teamNameEditText.setText(car.teamName);
+                            carModelEditText.setText(car.carModel);
+                            carPlateEditText.setText(car.carPlate);
+                        }
                     } else {
-                        Toast.makeText(CarDetailsActivity.this, "Failed to save car details.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to fetch car details.", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+
+        builder.show();
     }
 
-    // Car class
-    static class Car {
+    // CarDetails class to hold car data
+    public static class CarDetails {
         public String teamName;
         public String carModel;
         public String carPlate;
 
-        public Car(String teamName, String carModel, String carPlate) {
+        public CarDetails() {} // Default constructor required for Firebase
+
+        public CarDetails(String teamName, String carModel, String carPlate) {
             this.teamName = teamName;
             this.carModel = carModel;
             this.carPlate = carPlate;
