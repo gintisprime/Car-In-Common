@@ -30,6 +30,7 @@
         </activity>
 
         <!-- Other Activities -->
+        <activity android:name=".ChatActivity" />
         <activity android:name=".GroupChatActivity" />
         <activity android:name=".StartScreenActivity" />
         <activity android:name=".ProfileActivity" />
@@ -40,6 +41,11 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainMenuActivity" />
 
+
+
+        <meta-data
+            android:name="android.security.rkp.disable"
+            android:value="true" />
 
 
         <meta-data

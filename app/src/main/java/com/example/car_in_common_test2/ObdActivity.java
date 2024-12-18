@@ -22,7 +22,7 @@ public class ObdActivity extends AppCompatActivity {
     public void fetchFuelLevel(FuelLevelListener listener) {
         new Thread(() -> {
             try {
-                ObdAdapter obdAdapter = new ObdAdapter("192.168.48.128", 35000);
+                ObdAdapter obdAdapter = new ObdAdapter("192.168.1.2", 35000);
                 socket = obdAdapter.connectToObdAdapter();
 
                 if (socket == null) {

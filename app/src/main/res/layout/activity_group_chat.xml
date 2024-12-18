@@ -23,7 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Δημιουργία Ομάδας"
+        android:text="Είσοδος στο Τσατ"
         android:textColor="@android:color/white"
         android:backgroundTint="@android:color/black"
         android:textStyle="bold"
@@ -34,11 +34,11 @@
 
     <!-- Join Group Button -->
     <Button
-        android:id="@+id/joinGroupButton"
+        android:id="@+id/disconnectButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Είσοδος Σε Ομάδα"
+        android:text="Αποσύνδεση"
         android:textColor="@android:color/white"
         android:backgroundTint="@android:color/black"
         android:textStyle="bold"

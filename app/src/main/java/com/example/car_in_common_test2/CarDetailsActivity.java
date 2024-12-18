@@ -68,20 +68,46 @@ public class CarDetailsActivity extends AppCompatActivity {
             // If an existing car is selected, link it to the user
             linkCarToUser(selectedCarId);
         } else {
-            // Save data to the global cars node if no existing car is selected
-            String carId = mCarDatabase.push().getKey();
-            if (carId != null) {
-                CarDetails carDetails = new CarDetails(teamName, carModel, carPlate);
-                mCarDatabase.child(carId).setValue(carDetails)
-                        .addOnSuccessListener(aVoid -> {
-                            linkCarToUser(carId);
-                            Toast.makeText(this, "Car details saved.", Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e ->
-                                Toast.makeText(this, "Failed to save car details.", Toast.LENGTH_SHORT).show());
-            }
+            // Check for existing car before saving
+            mCarDatabase.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    String existingCarId = null;
+
+                    // Check if a car with the same details exists
+                    for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                        CarDetails car = snapshot.getValue(CarDetails.class);
+                        if (car != null && car.teamName.equals(teamName) &&
+                                car.carModel.equals(carModel) && car.carPlate.equals(carPlate)) {
+                            existingCarId = snapshot.getKey();
+                            break;
+                        }
+                    }
+
+                    if (existingCarId != null) {
+                        // Car already exists, link it to the user
+                        linkCarToUser(existingCarId);
+                        Toast.makeText(this, "Car already exists. Linked to your account.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Save new car data
+                        String carId = mCarDatabase.push().getKey();
+                        if (carId != null) {
+                            CarDetails carDetails = new CarDetails(teamName, carModel, carPlate);
+                            mCarDatabase.child(carId).setValue(carDetails)
+                                    .addOnSuccessListener(aVoid -> {
+                                        linkCarToUser(carId);
+                                        Toast.makeText(this, "Car details saved.", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(this, "Failed to save car details.", Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Failed to check existing cars.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
+
 
     private void linkCarToUser(String carId) {
         // Link the car ID to the current user
