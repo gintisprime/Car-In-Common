@@ -89,7 +89,7 @@ public class MainMenuActivity extends AppCompatActivity {
         navHome.setOnClickListener(v -> Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show());
         navCalendar.setOnClickListener(v -> Toast.makeText(this, "Calendar clicked", Toast.LENGTH_SHORT).show());
         navMaps.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, MapsActivity.class)));
-        navTransactions.setOnClickListener(v -> Toast.makeText(this, "Transactions clicked", Toast.LENGTH_SHORT).show());
+        navTransactions.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, TransactionsActivity.class)));
         navChat.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, GroupChatActivity.class)));
 
         accountIcon.setOnClickListener(v -> {
