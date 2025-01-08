@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -20,7 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -29,13 +27,11 @@ public class MainMenuActivity extends AppCompatActivity {
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable fuelLevelRunnable;
 
-    private ImageView navHome, navCalendar, navMaps, navTransactions, navChat, accountIcon;
-
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        getLayoutInflater().inflate(R.layout.activity_main_menu, findViewById(R.id.contentFrame));
 
         // Initialize Firebase and UI components
         mAuth = FirebaseAuth.getInstance();
@@ -43,13 +39,6 @@ public class MainMenuActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
 
         fuelTankLevel = findViewById(R.id.fuelLevelValue);
-
-        navHome = findViewById(R.id.navHome);
-        navCalendar = findViewById(R.id.navCalendar);
-        navMaps = findViewById(R.id.navMaps);
-        navTransactions = findViewById(R.id.navTransactions);
-        navChat = findViewById(R.id.navChat);
-        accountIcon = findViewById(R.id.accountIcon);
 
         // Initialize TextViews for full name and email
         TextView userFullName = findViewById(R.id.userFullName);
@@ -79,26 +68,8 @@ public class MainMenuActivity extends AppCompatActivity {
         }
 
         // Other initialization methods
-        setButtonListeners();
         checkUserAuthentication();
         startFuelLevelUpdates();
-    }
-
-
-    private void setButtonListeners() {
-        navHome.setOnClickListener(v -> Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show());
-        navCalendar.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, CalendarActivity.class)));
-        navMaps.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, MapsActivity.class)));
-        navTransactions.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, TransactionsActivity.class)));
-        navChat.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, GroupChatActivity.class)));
-
-        accountIcon.setOnClickListener(v -> {
-            if (drawerLayout != null) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            } else {
-                Toast.makeText(this, "Error: Drawer not initialized.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void checkUserAuthentication() {
@@ -144,34 +115,6 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
     }
-
-
-//    private void loadDrawerHeader() {
-//        // Initialize TextViews
-//        TextView usernameTextView = findViewById(R.id.username);
-//        TextView emailTextView = findViewById(R.id.email);
-//
-//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (currentUser != null) {
-//            // Fetch user data from Firebase
-//            mDatabase.child("users").child(currentUser.getUid()).get()
-//                    .addOnSuccessListener(dataSnapshot -> {
-//                        if (dataSnapshot.exists()) {
-//                            String username = dataSnapshot.child("name").getValue(String.class);
-//                            String email = dataSnapshot.child("email").getValue(String.class);
-//                            System.out.println("Username :" + username);
-//                            usernameTextView.setText(username != null ? username : "Username not set");
-//                            emailTextView.setText(email != null ? email : "Email not set");
-//                        }
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        usernameTextView.setText("Error fetching data");
-//                        emailTextView.setText("Error fetching data");
-//                    });
-//        }
-//    }
-
-
 
     private void redirectToCarDetails() {
         Toast.makeText(MainMenuActivity.this, "Συμπληρώστε τα στοιχεία του αυτοκινήτου.", Toast.LENGTH_SHORT).show();
