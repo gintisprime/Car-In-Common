@@ -75,8 +75,8 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
-    // Reservation model class
-    public class Reservation {
+    // Static Reservation model class
+    public static class Reservation {
         private String date;
         private String startTime;
         private String endTime;
@@ -86,9 +86,9 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         public Reservation(String date, String startTime, String endTime) {
-            this.date = date;
-            this.startTime = startTime;
-            this.endTime = endTime;
+            this.date = date != null ? date : "";
+            this.startTime = startTime != null ? startTime : "";
+            this.endTime = endTime != null ? endTime : "";
         }
 
         public String getDate() {
@@ -113,8 +113,13 @@ public class CalendarActivity extends AppCompatActivity {
                     reservationsList.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Reservation reservation = snapshot.getValue(Reservation.class);
-                        reservationsList.add(reservation);
+                        if (reservation != null) {
+                            reservationsList.add(reservation);
+                        } else {
+                            Log.e("Firebase", "Failed to map snapshot to Reservation object: " + snapshot.toString());
+                        }
                     }
+                    Log.d("Firebase", "Reservations loaded: " + reservationsList.size());
                 }
 
                 @Override
