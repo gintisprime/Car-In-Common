@@ -5,4 +5,5 @@
     <color name="background">#FFFFFF</color> <!-- White for other areas -->
     <color name="icon_color">#000000</color> <!-- Black for icons -->
     <color name="text_color">#000000</color> <!-- Black for text -->
+    <color name="purple_500">#FF6200EE</color>
 </resources>

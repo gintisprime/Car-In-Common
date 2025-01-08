@@ -1,15 +1,34 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
+    <!-- Base application theme -->
     <style name="Base.Theme.CarInCommonTest2" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/gradient_top</item>
         <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorAccent">@color/gradient_bottom</item>
-
 
         <!-- Background and text colors -->
         <item name="android:colorBackground">@color/background</item>
         <item name="android:textColor">@color/text_color</item>
     </style>
 
+    <!-- Theme that extends the base theme -->
     <style name="Theme.CarInCommonTest2" parent="Base.Theme.CarInCommonTest2" />
+
+    <!-- Text appearances for calendar components -->
+    <style name="CalendarDayTextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="CalendarHeaderTextAppearance" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CalendarWeekDayTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

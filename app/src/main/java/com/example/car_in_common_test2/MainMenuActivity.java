@@ -87,7 +87,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void setButtonListeners() {
         navHome.setOnClickListener(v -> Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show());
-        navCalendar.setOnClickListener(v -> Toast.makeText(this, "Calendar clicked", Toast.LENGTH_SHORT).show());
+        navCalendar.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, CalendarActivity.class)));
         navMaps.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, MapsActivity.class)));
         navTransactions.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, TransactionsActivity.class)));
         navChat.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, GroupChatActivity.class)));
@@ -174,7 +174,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
     private void redirectToCarDetails() {
-        Toast.makeText(MainMenuActivity.this, "Please provide car details.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainMenuActivity.this, "Συμπληρώστε τα στοιχεία του αυτοκινήτου.", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, CarDetailsActivity.class));
         finish();
     }
@@ -195,7 +195,7 @@ public class MainMenuActivity extends AppCompatActivity {
         obdActivity.fetchFuelLevel(new ObdActivity.FuelLevelListener() {
             @Override
             public void onFuelLevelReceived(String fuelLevel) {
-                runOnUiThread(() -> fuelTankLevel.setText("Fuel Level: " + fuelLevel));
+                runOnUiThread(() -> fuelTankLevel.setText("Ποσοστό Βενζίνης: " + fuelLevel));
             }
 
             @Override
