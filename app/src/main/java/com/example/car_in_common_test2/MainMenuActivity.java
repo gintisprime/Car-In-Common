@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,8 @@ public class MainMenuActivity extends BaseActivity {
         TextView userFullName = findViewById(R.id.userFullName);
         TextView userEmail = findViewById(R.id.userEmail);
 
+        Button signOutButton = findViewById(R.id.signOutButton);
+
         // Fetch user data from Firebase
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -66,6 +69,21 @@ public class MainMenuActivity extends BaseActivity {
                 userEmail.setText("Error loading data");
             });
         }
+
+        // Add sign-out logic
+        signOutButton.setOnClickListener(v -> {
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Sign Out")
+                    .setMessage("Are you sure you want to sign out?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        mAuth.signOut();
+                        Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, StartScreenActivity.class));
+                        finish();
+                    })
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                    .show();
+        });
 
         // Other initialization methods
         checkUserAuthentication();
