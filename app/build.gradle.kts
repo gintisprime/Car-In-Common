@@ -56,6 +56,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.google.firebase:firebase-database")
 
+    //Loading Effects
+    implementation ("com.airbnb.android:lottie:6.1.0")
+
+
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)

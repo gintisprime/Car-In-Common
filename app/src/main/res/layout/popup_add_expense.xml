@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/popup_background">
+
+    <EditText
+        android:id="@+id/expense_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Amount"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/expense_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Date"
+        android:inputType="date" />
+
+    <Spinner
+        android:id="@+id/expense_reason_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/expense_reason_prompt" />
+
+    <CheckBox
+        android:id="@+id/share_expense_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share this Expense" />
+
+    <ImageButton
+        android:id="@+id/declare_expense_button"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/register_transaction_button_gr"
+        android:text="Declare Expense" />
+</LinearLayout>

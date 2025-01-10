@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="@color/gradient_bottom">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,12 +23,12 @@
         <!-- Upload Picture Button -->
         <Button
             android:id="@+id/buttonUploadPicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="153dp"
+            android:layout_height="58dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/nav_bar_color"
             android:text="Upload Picture"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/background"
-            android:layout_marginBottom="24dp" />
+            android:textColor="@android:color/white" />
 
         <!-- Input Fields -->
         <EditText
@@ -65,23 +65,30 @@
             android:textColorHint="@android:color/darker_gray" />
 
         <!-- Submit Button -->
-        <Button
+        <ImageButton
             android:id="@+id/buttonSubmitCarDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/text_color"
-            android:padding="12dp"
-            android:layout_marginTop="16dp" />
-
-
-        <Button
-            android:id="@+id/buttonChooseExistingCar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="342dp"
+            android:layout_height="87dp"
             android:layout_marginTop="16dp"
-            android:text="Choose Existing Car" />
+            android:background="@null"
+            android:contentDescription="Submit Car Details"
+            android:padding="12dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/apply_button_gr"
+            android:textColor="@android:color/white" />
+
+
+        <ImageButton
+            android:id="@+id/buttonChooseExistingCar"
+            android:layout_width="337dp"
+            android:layout_height="99dp"
+            android:layout_marginTop="16dp"
+            android:background="@null"
+            android:contentDescription="Choose Existing Car"
+            android:padding="12dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/existing_vehicle_button_gr"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 </ScrollView>

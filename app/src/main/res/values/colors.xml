@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gradient_top">#1E90FF</color> <!-- Blue -->
-    <color name="gradient_bottom">#F0F0F0</color> <!-- Light Gray -->
-    <color name="background">#FFFFFF</color> <!-- White for other areas -->
+    <color name="gradient_top">#1C6281</color> <!-- Blue -->
+    <color name="gradient_bottom">#D9CFCF</color>
+    <color name="background">#D9CFCF</color> <!-- White for other areas -->
     <color name="icon_color">#000000</color> <!-- Black for icons -->
     <color name="text_color">#000000</color> <!-- Black for text -->
+<<<<<<< Updated upstream
+=======
+    <color name="purple_500">#FF6200EE</color>
+    <color name="nav_bar_color">#1C314A</color>
+>>>>>>> Stashed changes
 </resources>

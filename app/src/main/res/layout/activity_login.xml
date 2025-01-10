@@ -3,17 +3,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/gradient_background"
+    android:background="@drawable/gradient"
     android:padding="16dp">
 
     <!-- App Icon -->
     <ImageView
         android:id="@+id/appLogo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/car_on_common_logo"
+        android:layout_width="300dp"
+        android:layout_height="277dp"
+        android:layout_marginBottom="24dp"
         android:contentDescription="App Logo"
-        android:layout_marginBottom="24dp" />
+        android:src="@drawable/car_in_common_logo" />
 
     <!-- Login Title -->
     <TextView
@@ -53,14 +53,15 @@
         android:layout_marginBottom="16dp" />
 
     <!-- Login Button -->
-    <Button
-        android:id="@+id/buttonLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Είσοδος"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@android:color/black"
-        android:layout_marginBottom="16dp" />
+    <ImageButton
+        android:id="@+id/enterButton"
+        android:layout_width="271dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:contentDescription="Enter Button"
+        android:scaleType="fitXY"
+        android:src="@drawable/enter_button_gr" />
 
 
     <!-- Login Button -->

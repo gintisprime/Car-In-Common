@@ -3,6 +3,7 @@ package com.example.car_in_common_test2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,8 +15,8 @@ public class StartScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startscreen);
 
         // Initialize Buttons
-        Button loginButton = findViewById(R.id.loginButton);
-        Button registerButton = findViewById(R.id.registerButton);
+        ImageButton loginButton = findViewById(R.id.loginButton);
+        ImageButton registerButton = findViewById(R.id.registerButton);
 
         // Login Button Click Listener
         loginButton.setOnClickListener(v -> {

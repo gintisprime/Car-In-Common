@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
+<<<<<<< Updated upstream
     <!-- Top Section -->
     <LinearLayout
         android:id="@+id/topSection"
@@ -15,6 +16,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+=======
+    <!-- Main Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient">
+>>>>>>> Stashed changes
 
         <!-- Group Title -->
         <TextView
@@ -93,4 +101,79 @@
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
+<<<<<<< Updated upstream
 </androidx.constraintlayout.widget.ConstraintLayout>
+=======
+            <!-- Send Button -->
+            <Button
+                android:id="@+id/buttonSend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                android:backgroundTint="@color/gradient_top"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Navigation Bar -->
+        <LinearLayout
+            android:id="@+id/navigationButtons"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:background="@color/gradient_top"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/navHome"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home"
+                android:contentDescription="Home"
+                android:layout_marginHorizontal="16dp"
+                app:tint="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/navCalendar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/calendar"
+                android:contentDescription="Calendar"
+                android:layout_marginHorizontal="16dp"
+                app:tint="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/navMaps"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/location"
+                android:contentDescription="Maps"
+                android:layout_marginHorizontal="16dp"
+                app:tint="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/navTransactions"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/transactions"
+                android:contentDescription="Transactions"
+                android:layout_marginHorizontal="16dp"
+                app:tint="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/navChat"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/chat"
+                android:contentDescription="Chat"
+                android:layout_marginHorizontal="16dp"
+                app:tint="@android:color/white" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
+>>>>>>> Stashed changes

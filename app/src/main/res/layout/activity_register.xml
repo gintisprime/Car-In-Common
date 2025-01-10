@@ -1,91 +1,104 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/gradient"
     android:gravity="center"
-    android:background="@drawable/gradient_background"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <!-- App Icon -->
-    <ImageView
-        android:id="@+id/appLogo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/car_on_common_logo"
-        android:contentDescription="App Logo"
-        android:layout_marginBottom="24dp" />
 
     <!-- Register Title -->
+    <ImageView
+        android:id="@+id/appLogo"
+        android:layout_width="258dp"
+        android:layout_height="222dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/car_in_common_logo" />
+
     <TextView
         android:id="@+id/registerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:text="Δημιουργία Λογαριασμού"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="24dp" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <!-- Name Input -->
-    <EditText
-        android:id="@+id/editTextName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Όνομα"
-        android:inputType="textPersonName"
-        android:backgroundTint="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textColor="@android:color/white"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
 
     <!-- Last Name Input -->
-    <EditText
-        android:id="@+id/editTextLastName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Επίθετο"
-        android:inputType="textPersonName"
-        android:backgroundTint="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textColor="@android:color/white"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
 
     <!-- Email Input -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- First Text Field -->
+        <EditText
+            android:id="@+id/firstName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Όνομα"
+            android:inputType="textPersonName" />
+
+        <!-- Space Between Fields (Optional) -->
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
+        <!-- Second Text Field -->
+        <EditText
+            android:id="@+id/lastName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Επίθετο"
+            android:inputType="textPersonName" />
+    </LinearLayout>
+
+
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@android:color/white"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:backgroundTint="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textColor="@android:color/white"
         android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white" />
 
     <!-- Password Input -->
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@android:color/white"
         android:hint="Κωδικός"
         android:inputType="textPassword"
-        android:backgroundTint="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:textColor="@android:color/white"
         android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white" />
 
     <!-- Register Button -->
-    <Button
+    <ImageButton
         android:id="@+id/buttonRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="324dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/create_account_button_gr"
         android:text="Είσοδος"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@android:color/black"
-        android:layout_marginBottom="16dp" />
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

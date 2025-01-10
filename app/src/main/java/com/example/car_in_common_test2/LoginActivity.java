@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
-    private Button loginButton, forgotPasswordButton;
+    private Button  forgotPasswordButton;
+
+    private ImageButton enterButton;
     private FirebaseAuth mAuth; // Firebase Authentication instance
 
     @Override
@@ -29,11 +32,11 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize UI components
         emailEditText = findViewById(R.id.editTextEmail);
         passwordEditText = findViewById(R.id.editTextPassword);
-        loginButton = findViewById(R.id.buttonLogin);
+        enterButton = findViewById(R.id.enterButton);
         forgotPasswordButton = findViewById(R.id.buttonForgotPassword);
 
         // Login button click event
-        loginButton.setOnClickListener(v -> {
+        enterButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
 

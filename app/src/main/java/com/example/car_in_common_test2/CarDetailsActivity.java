@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 public class CarDetailsActivity extends AppCompatActivity {
 
     private EditText teamNameEditText, carModelEditText, carPlateEditText;
-    private Button submitButton, chooseExistingCarButton;
+    private ImageButton submitButton, chooseExistingCarButton;
 
     private DatabaseReference mCarDatabase, mUserDatabase;
     private ArrayList<String> carList;

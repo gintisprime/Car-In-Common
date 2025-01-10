@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,11 +31,11 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference("users"); // Users node
 
-        nameEditText = findViewById(R.id.editTextName);
-        surnameEditText = findViewById(R.id.editTextLastName);
+        nameEditText = findViewById(R.id.firstName);
+        surnameEditText = findViewById(R.id.lastName);
         emailEditText = findViewById(R.id.editTextEmail);
         passwordEditText = findViewById(R.id.editTextPassword);
-        Button registerButton = findViewById(R.id.buttonRegister);
+        ImageButton registerButton = findViewById(R.id.buttonRegister);
 
         // Register Button
         registerButton.setOnClickListener(v -> {
