@@ -1,34 +1,62 @@
 <resources>
     <!-- Base application theme -->
     <style name="Base.Theme.CarInCommonTest2" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary and accent colors -->
         <item name="colorPrimary">@color/gradient_top</item>
-        <item name="colorPrimaryVariant">@color/background</item>
-        <item name="colorAccent">@color/gradient_bottom</item>
+        <item name="colorPrimaryVariant">@color/gradient_bottom</item>
+        <item name="colorAccent">@color/accent</item>
 
         <!-- Background and text colors -->
         <item name="android:colorBackground">@color/background</item>
         <item name="android:textColor">@color/text_color</item>
+
+        <!-- AppBar/Toolbar -->
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <item name="windowActionBar">false</item>
     </style>
 
-    <!-- Theme that extends the base theme -->
+    <!-- Main application theme -->
     <style name="Theme.CarInCommonTest2" parent="Base.Theme.CarInCommonTest2" />
 
-    <!-- Text appearances for calendar components -->
+    <!-- Toolbar style -->
+    <style name="ActionBarStyle" parent="Widget.Material3.Toolbar">
+        <item name="background">@color/gradient_top</item>
+        <item name="android:titleTextColor">@color/text_color</item>
+        <item name="android:subtitleTextColor">@color/text_color</item>
+    </style>
+
+    <!-- Calendar-specific styles -->
     <style name="CalendarDayTextAppearance" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColor">@color/calendar_day_text</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="CalendarHeaderTextAppearance" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColor">@color/calendar_header_text</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CalendarWeekDayTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColor">@color/calendar_weekday_text</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <!-- Button styles -->
+    <style name="PrimaryButtonStyle" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/gradient_top</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <!-- RecyclerView item text -->
+    <style name="EventItemTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 </resources>
+

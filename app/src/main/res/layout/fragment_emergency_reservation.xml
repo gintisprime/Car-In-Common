@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Επέλεξε ώρα/ες δέσμευσης έκτακτης ανάγκης:"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp" />
+
+    <NumberPicker
+        android:id="@+id/durationPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Δημιουργία Έκτακτης Δέσμευσης"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

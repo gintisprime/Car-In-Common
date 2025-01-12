@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "237091127653",
+    "firebase_url": "https://car-in-common.firebaseio.com",
     "project_id": "car-in-common",
     "storage_bucket": "car-in-common.appspot.com"
   },
