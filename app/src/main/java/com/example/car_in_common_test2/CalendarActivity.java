@@ -57,7 +57,7 @@ public class CalendarActivity extends AppCompatActivity {
             // Show dialog for two choices
             new AlertDialog.Builder(CalendarActivity.this)
                     .setTitle("Choose Reservation Type")
-                    .setItems(new String[]{"Normal Reservation", "Emergency Reservation"}, (dialog, which) -> {
+                    .setItems(new String[]{"Κανονική Δέσμευση", "Δέσμευση Έκτακτης Ανάγκης"}, (dialog, which) -> {
                         if (which == 0) {
                             // Open Normal Reservation Fragment
                             NormalReservationFragment fragment = new NormalReservationFragment();
