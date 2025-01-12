@@ -8,44 +8,47 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;  // Correctly import List
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
-    private final ArrayList<Reservation> reservations;
+    private List<Reservation> reservations;  // Use List instead of ArrayList directly
 
-    public ReservationAdapter(ArrayList<Reservation> reservations) {
+    public ReservationAdapter(List<Reservation> reservations) {
         this.reservations = reservations;
     }
 
-    @NonNull
     @Override
-    public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_reservation, parent, false);
+    public ReservationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_reservation, parent, false);
         return new ReservationViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
+    public void onBindViewHolder(ReservationViewHolder holder, int position) {
         Reservation reservation = reservations.get(position);
-        holder.typeTextView.setText(reservation.getType());
-        holder.descriptionTextView.setText(reservation.getDescription());
-        holder.dateTextView.setText(reservation.getDate());
+        holder.reasonTextView.setText(reservation.getReason());
+        holder.startTimeTextView.setText(reservation.getStartTime());
+        holder.endTimeTextView.setText(reservation.getEndTime());
     }
 
     @Override
     public int getItemCount() {
-        return reservations.size();
+        return reservations.size();  // Returns the size of the list
     }
 
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
-        TextView typeTextView, descriptionTextView, dateTextView;
 
-        public ReservationViewHolder(@NonNull View itemView) {
+        TextView reasonTextView;
+        TextView startTimeTextView;
+        TextView endTimeTextView;
+
+        public ReservationViewHolder(View itemView) {
             super(itemView);
-            typeTextView = itemView.findViewById(R.id.typeTextView);
-            descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
-            dateTextView = itemView.findViewById(R.id.dateTextView);
+            reasonTextView = itemView.findViewById(R.id.reasonTextView);
+            startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
+            endTimeTextView = itemView.findViewById(R.id.endTimeTextView);
         }
     }
 }

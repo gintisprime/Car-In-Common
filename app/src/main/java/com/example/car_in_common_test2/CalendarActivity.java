@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import androidx.appcompat.app.AlertDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import androidx.appcompat.app.AlertDialog;
 
 public class CalendarActivity extends AppCompatActivity {
 
@@ -78,22 +79,23 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void fetchReservations(String date) {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.orderByChild("date").equalTo(date).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                reservations.clear();
+                reservations.clear();  // Clear previous reservations
+
                 for (DataSnapshot data : snapshot.getChildren()) {
                     Reservation reservation = data.getValue(Reservation.class);
-                    if (reservation != null && reservation.getDate().equals(date)) {
-                        reservations.add(reservation);
+                    if (reservation != null) {
+                        reservations.add(reservation);  // Add the reservation to the list
                     }
                 }
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();  // Notify the adapter to update the RecyclerView
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Handle errors
+                // Handle error
             }
         });
     }

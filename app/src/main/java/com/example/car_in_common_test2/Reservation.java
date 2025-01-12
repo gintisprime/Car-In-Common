@@ -7,6 +7,9 @@ public class Reservation {
     private String startTime;
     private String endTime;
 
+    public Reservation(String emergency, String date, String s) {
+    }
+
     // Getters and Setters
     public String getDate() {
         return date;
