@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TransactionsActivity extends AppCompatActivity {
+public class TransactionsActivity extends BaseActivity {
 
     private double totalExpenses = 0.0;
     private TextView totalExpensesView;
@@ -40,7 +39,7 @@ public class TransactionsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dapanes);
+        getLayoutInflater().inflate(R.layout.activity_dapanes, findViewById(R.id.contentFrame));
 
         totalExpensesView = findViewById(R.id.total_expenses);
         Button addExpenseButton = findViewById(R.id.add_expense_button);
@@ -241,5 +240,4 @@ public class TransactionsActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> Log.d("Firebase", "Notification sent to user: " + userId))
                 .addOnFailureListener(e -> Log.e("Firebase", "Failed to send notification to user: " + userId, e));
     }
-
 }
