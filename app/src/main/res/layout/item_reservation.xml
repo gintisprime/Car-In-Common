@@ -2,26 +2,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/reasonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reservation Reason"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:text="Σκοπός" />
 
     <TextView
         android:id="@+id/startTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Time" />
+        android:text="Ώρα Έναρξης" />
 
     <TextView
         android:id="@+id/endTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="End Time" />
+        android:text="Ώρα Λήξης" />
 </LinearLayout>

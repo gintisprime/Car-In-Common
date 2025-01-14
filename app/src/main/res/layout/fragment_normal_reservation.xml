@@ -1,5 +1,4 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
@@ -58,10 +57,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Σημαντικότητα Δέσμευσης"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
 
         <RadioGroup
-            android:id="@+id/importanceRadioGroup"
+            android:id="@+id/importancyRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -81,15 +81,17 @@
                 android:layout_marginStart="16dp" />
         </RadioGroup>
 
+
         <!-- Release Time Certain -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Είναι σίγουρη η ώρα αποδέσμευσης του οχήματος;"
-            android:textSize="16sp" />
+            android:text="Είναι σίγουρη η ώρα αποδέσμευσης του οχήματος?"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
 
         <RadioGroup
-            android:id="@+id/releaseTimeRadioGroup"
+            android:id="@+id/releaseCertaintyRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

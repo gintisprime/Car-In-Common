@@ -8,25 +8,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;  // Correctly import List
+import java.util.ArrayList;
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
-    private List<Reservation> reservations;  // Use List instead of ArrayList directly
+    private ArrayList<Reservation> reservations;
 
-    public ReservationAdapter(List<Reservation> reservations) {
+    public ReservationAdapter(ArrayList<Reservation> reservations) {
         this.reservations = reservations;
     }
 
+    @NonNull
     @Override
-    public ReservationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_reservation, parent, false);
         return new ReservationViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ReservationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
         Reservation reservation = reservations.get(position);
         holder.reasonTextView.setText(reservation.getReason());
         holder.startTimeTextView.setText(reservation.getStartTime());
@@ -35,7 +36,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
     @Override
     public int getItemCount() {
-        return reservations.size();  // Returns the size of the list
+        return reservations.size();
     }
 
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
