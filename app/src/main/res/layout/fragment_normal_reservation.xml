@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:hint="Ημερομηνία Δέσμευσης"
             android:focusable="false"
-            android:layout_marginBottom="16dp" />
+            android:inputType="date"/>
 
         <!-- Start Time -->
         <EditText
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:hint="Ώρα έναρξης"
             android:focusable="false"
-            android:layout_marginBottom="16dp" />
+            android:inputType="time" />
 
         <!-- End Time -->
         <EditText
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:hint="Ώρα λήξης"
             android:focusable="false"
-            android:layout_marginBottom="16dp" />
+            android:inputType="time" />
 
         <!-- Importance -->
         <TextView

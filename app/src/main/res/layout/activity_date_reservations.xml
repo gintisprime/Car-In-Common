@@ -4,17 +4,20 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- TextView to display the selected date -->
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reservations for:"
+        android:text="Δεσμέυσεις:"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
 
+    <!-- RecyclerView to display the list of reservations -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:textSize="18sp" />
 </LinearLayout>

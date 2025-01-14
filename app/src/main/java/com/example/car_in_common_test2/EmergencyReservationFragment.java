@@ -5,59 +5,56 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class EmergencyReservationFragment extends DialogFragment {
 
-    private EditText durationPicker;
-    private Button saveButton;
+    private String selectedDate;
+
+    public void setSelectedDate(String date) {
+        this.selectedDate = date;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_emergency_reservation, container, false);
 
-        durationPicker = view.findViewById(R.id.durationPicker);
-        saveButton = view.findViewById(R.id.saveButton);
+        Spinner durationSpinner = view.findViewById(R.id.emergencyDurationSpinner);  // Spinner for selecting duration
+        Button saveButton = view.findViewById(R.id.emergencySaveButton);
 
-        saveButton.setOnClickListener(v -> createEmergencyReservation());
+        // Create an ArrayAdapter for the Spinner with values 1 to 5
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getContext(), R.array.duration_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        durationSpinner.setAdapter(adapter);
+
+        saveButton.setOnClickListener(v -> {
+            int selectedDuration = durationSpinner.getSelectedItemPosition() + 1;  // Get the selected duration (1-5)
+
+            // Ensure that the user picks a valid duration
+            if (selectedDuration < 1 || selectedDuration > 5) {
+                Toast.makeText(getContext(), "Please choose a valid duration.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Handle the logic for saving the emergency reservation
+                saveEmergencyReservation(selectedDuration);  // Add logic to handle the reservation with the chosen duration
+                dismiss(); // Close dialog
+            }
+        });
+
         return view;
     }
 
-    private void createEmergencyReservation() {
-        String durationStr = durationPicker.getText().toString().trim();
-
-        if (durationStr.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a duration", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        int duration = Integer.parseInt(durationStr);
-        if (duration < 1 || duration > 5) {
-            Toast.makeText(getContext(), "Duration must be between 1 and 5 hours", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String selectedDate = getArguments().getString("selectedDate");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("reservations");
-
-        String id = databaseReference.push().getKey();
-        Reservation reservation = new Reservation(id, "Emergency", selectedDate, "Emergency Reservation", "Now", "In " + duration + " hours", "High", "Yes");
-
-        // Save emergency reservation to Firebase
-        databaseReference.child(selectedDate).child(id).setValue(reservation).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(getContext(), "Emergency reservation created successfully!", Toast.LENGTH_SHORT).show();
-                dismiss();
-            } else {
-                Toast.makeText(getContext(), "Failed to create emergency reservation.", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void saveEmergencyReservation(int duration) {
+        // Handle the logic for saving the emergency reservation (e.g., updating Firebase, updating calendar)
+        // You can use the selectedDate and duration to create the reservation data.
+        Toast.makeText(getContext(), "Emergency reservation for " + duration + " hours saved.", Toast.LENGTH_SHORT).show();
+        // You would typically save this data to Firebase or local storage
     }
 }

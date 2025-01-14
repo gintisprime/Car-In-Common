@@ -8,42 +8,38 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
-    private ArrayList<Reservation> reservations;
+    private List<Reservation> reservationList;
 
-    public ReservationAdapter(ArrayList<Reservation> reservations) {
-        this.reservations = reservations;
+    public ReservationAdapter(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 
     @NonNull
     @Override
     public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_reservation, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_reservation, parent, false);
         return new ReservationViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
-        Reservation reservation = reservations.get(position);
-        holder.reasonTextView.setText(reservation.getReason());
-        holder.startTimeTextView.setText(reservation.getStartTime());
-        holder.endTimeTextView.setText(reservation.getEndTime());
+        Reservation reservation = reservationList.get(position);
+        holder.reasonTextView.setText("Reason: " + reservation.getReason());
+        holder.startTimeTextView.setText("Start Time: " + reservation.getStartTime());
+        holder.endTimeTextView.setText("End Time: " + reservation.getEndTime());
     }
 
     @Override
     public int getItemCount() {
-        return reservations.size();
+        return reservationList.size();
     }
 
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
-
-        TextView reasonTextView;
-        TextView startTimeTextView;
-        TextView endTimeTextView;
+        TextView reasonTextView, startTimeTextView, endTimeTextView;
 
         public ReservationViewHolder(View itemView) {
             super(itemView);

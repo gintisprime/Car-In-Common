@@ -23,14 +23,13 @@ public class DateReservationsActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private ReservationAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date_reservations);
 
-        dateTextView = findViewById(R.id.dateTextView);
-        recyclerView = findViewById(R.id.recyclerView);
+        dateTextView = findViewById(R.id.dateTextView);  // Correct reference
+        recyclerView = findViewById(R.id.recyclerView);  // Correct reference
 
         String selectedDate = getIntent().getStringExtra("selectedDate");
         dateTextView.setText("Reservations for " + selectedDate);

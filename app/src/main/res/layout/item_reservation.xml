@@ -1,24 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:layout_marginBottom="8dp">
 
     <TextView
         android:id="@+id/reasonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Σκοπός" />
+        android:text="Σκοπός:"
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/startTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ώρα Έναρξης" />
+        android:text="Ώρα Έναρξης:"
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/endTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ώρα Λήξης" />
+        android:text="Ώρα Λήξης:"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/importanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Σημαντικότητα:"
+        android:textSize="14sp"/>
 </LinearLayout>
