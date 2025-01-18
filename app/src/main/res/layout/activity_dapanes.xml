@@ -93,28 +93,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/view_history_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Ιστορικό Δαπανών Μου"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textStyle="bold"
-            android:paddingVertical="12dp"
-            android:elevation="4dp" />
-
-        <Button
+        <ImageButton
             android:id="@+id/add_expense_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Δήλωση Νέας Δαπάνης"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textStyle="bold"
-            android:paddingVertical="12dp"
-            android:elevation="4dp" />
+            android:layout_height="130dp"
+            android:background="@null"
+            android:contentDescription="Add Expense"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_new_transaction_gr" />
+
+        <ImageButton
+            android:id="@+id/view_history_button"
+            android:layout_width="match_parent"
+            android:layout_height="114dp"
+            android:background="@null"
+            android:contentDescription="View History"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_transactions_history_gr" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

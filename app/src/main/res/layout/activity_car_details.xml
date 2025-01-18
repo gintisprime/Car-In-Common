@@ -74,7 +74,7 @@
             android:contentDescription="Submit Car Details"
             android:padding="12dp"
             android:scaleType="fitXY"
-            android:src="@drawable/apply_button_gr"
+            android:src="@drawable/btn_submit_gr"
             android:textColor="@android:color/white" />
 
 
@@ -87,7 +87,7 @@
             android:contentDescription="Choose Existing Car"
             android:padding="12dp"
             android:scaleType="fitXY"
-            android:src="@drawable/existing_vehicle_button_gr"
+            android:src="@drawable/btn_existing_vehicle_gr"
             android:textColor="@android:color/white" />
 
     </LinearLayout>

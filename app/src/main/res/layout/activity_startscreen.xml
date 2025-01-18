@@ -25,7 +25,7 @@
         android:background="@null"
         android:contentDescription="Login Button"
         android:scaleType="fitXY"
-        android:src="@drawable/login_button_gr" />
+        android:src="@drawable/btn_login_gr" />
 
     <!-- Register Button -->
     <ImageButton
@@ -36,5 +36,5 @@
         android:background="@null"
         android:contentDescription="Register Button"
         android:scaleType="fitXY"
-        android:src="@drawable/create_account_button_gr" />
+        android:src="@drawable/btn_register_gr" />
 </LinearLayout>

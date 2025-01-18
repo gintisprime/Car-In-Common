@@ -61,7 +61,7 @@
         android:background="@null"
         android:contentDescription="Enter Button"
         android:scaleType="fitXY"
-        android:src="@drawable/enter_button_gr" />
+        android:src="@drawable/btn_enter_gr" />
 
 
     <!-- Login Button -->

@@ -38,6 +38,6 @@
         android:layout_height="65dp"
         android:background="@null"
         android:scaleType="fitXY"
-        android:src="@drawable/register_transaction_button_gr"
+        android:src="@drawable/btn_confirm_transaction_gr"
         android:text="Declare Expense" />
 </LinearLayout>

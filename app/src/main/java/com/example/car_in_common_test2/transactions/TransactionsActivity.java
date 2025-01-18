@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,8 +54,8 @@ public class TransactionsActivity extends BaseActivity {
 
         // Initialize UI components
         totalExpensesView = findViewById(R.id.total_expenses);
-        Button addExpenseButton = findViewById(R.id.add_expense_button);
-        Button viewHistoryButton = findViewById(R.id.view_history_button);
+        ImageButton addExpenseButton = findViewById(R.id.add_expense_button);
+        ImageButton viewHistoryButton = findViewById(R.id.view_history_button);
 
         // Validate UI components to avoid null pointers
         if (totalExpensesView == null || addExpenseButton == null || viewHistoryButton == null) {

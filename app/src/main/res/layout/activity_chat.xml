@@ -77,20 +77,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginTop="10dp"
             android:hint="Type here"
             android:background="@drawable/input_background"
             android:padding="8dp"
             android:textColor="@android:color/black" />
 
         <!-- Send Button -->
-        <Button
+        <ImageButton
             android:id="@+id/buttonSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send"
-            android:backgroundTint="@color/gradient_top"
-            android:textColor="@android:color/white"
-            android:layout_marginStart="8dp" />
+            android:layout_width="71dp"
+            android:layout_height="63dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_send" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -97,7 +97,7 @@
         android:layout_marginBottom="16dp"
         android:background="@null"
         android:scaleType="fitXY"
-        android:src="@drawable/create_account_button_gr"
+        android:src="@drawable/btn_register_gr"
         android:text="Είσοδος"
         android:textColor="@android:color/white" />
 

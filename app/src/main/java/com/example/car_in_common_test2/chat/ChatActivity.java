@@ -3,6 +3,7 @@ package com.example.car_in_common_test2.chat;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,7 @@ public class ChatActivity extends BaseActivity {
     private FirebaseAuth auth;
     private RecyclerView recyclerViewMessages;
     private EditText editTextMessage;
-    private Button buttonSend;
+    private ImageButton buttonSend;
     private MessageAdapter messageAdapter;
     private List<Message> messageList;
 
