@@ -2,6 +2,7 @@ package com.example.car_in_common_test2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,6 +20,8 @@ import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
 
+    private static final String TAG = "BaseActivity";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,20 +34,46 @@ public class BaseActivity extends AppCompatActivity {
         ImageView navTransactions = findViewById(R.id.navTransactions);
         ImageView navChat = findViewById(R.id.navChat);
 
-
-
+        // Debug: Ensure buttons are initialized
+        Log.d(TAG, "navHome initialized: " + (navHome != null));
+        Log.d(TAG, "navCalendar initialized: " + (navCalendar != null));
 
         // Set navigation listeners
-        navHome.setOnClickListener(v -> navigateTo(MainMenuActivity.class));
-        navCalendar.setOnClickListener(v -> navigateTo(CalendarActivity.class));
-        navMaps.setOnClickListener(v -> navigateTo(MapsActivity.class));
-        navTransactions.setOnClickListener(v -> navigateTo(TransactionsActivity.class));
-        navChat.setOnClickListener(v -> navigateToChat());
+        navHome.setOnClickListener(v -> {
+            Log.d(TAG, "Home clicked");
+            navigateTo(MainMenuActivity.class);
+        });
+
+        navCalendar.setOnClickListener(v -> {
+            Log.d(TAG, "Calendar clicked");
+            navigateTo(CalendarActivity.class);
+        });
+
+        navMaps.setOnClickListener(v -> {
+            Log.d(TAG, "Maps clicked");
+            navigateTo(MapsActivity.class);
+        });
+
+        navTransactions.setOnClickListener(v -> {
+            Log.d(TAG, "Transactions clicked");
+            navigateTo(TransactionsActivity.class);
+        });
+
+        navChat.setOnClickListener(v -> {
+            Log.d(TAG, "Chat clicked");
+            navigateToChat();
+        });
     }
 
     private void navigateTo(Class<?> targetActivity) {
-        if (!this.getClass().equals(targetActivity)) { // Avoid reloading the current activity
-            startActivity(new Intent(this, targetActivity));
+        try {
+            if (!this.getClass().equals(targetActivity)) { // Avoid reloading the current activity
+                Log.d(TAG, "Navigating to: " + targetActivity.getSimpleName());
+                startActivity(new Intent(this, targetActivity));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error navigating to: " + targetActivity.getSimpleName(), e);
+            Toast.makeText(this, "Error: Unable to navigate to " + targetActivity.getSimpleName(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -88,6 +117,7 @@ public class BaseActivity extends AppCompatActivity {
 
                                             if (groupExists) {
                                                 // Navigate to the existing chat
+                                                Log.d(TAG, "Navigating to existing chat with groupId: " + existingGroupId);
                                                 Intent intent = new Intent(this, ChatActivity.class);
                                                 intent.putExtra("groupId", existingGroupId);
                                                 startActivity(intent);
@@ -98,11 +128,13 @@ public class BaseActivity extends AppCompatActivity {
 
                                                 groupChatRef.child(groupId).setValue(newGroupChat)
                                                         .addOnSuccessListener(aVoid -> {
+                                                            Log.d(TAG, "Created new chat with groupId: " + groupId);
                                                             Intent intent = new Intent(this, ChatActivity.class);
                                                             intent.putExtra("groupId", groupId);
                                                             startActivity(intent);
                                                         })
                                                         .addOnFailureListener(e -> {
+                                                            Log.e(TAG, "Failed to create chat: " + e.getMessage());
                                                             Toast.makeText(this, "Failed to create chat", Toast.LENGTH_SHORT).show();
                                                         });
                                             }
@@ -111,6 +143,7 @@ public class BaseActivity extends AppCompatActivity {
                                         Toast.makeText(this, "No other users share your car ID.", Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(e -> {
+                                    Log.e(TAG, "Error fetching users: " + e.getMessage());
                                     Toast.makeText(this, "Error fetching users: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
@@ -118,17 +151,15 @@ public class BaseActivity extends AppCompatActivity {
                     }
                 }
             }).addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to fetch your car ID: " + e.getMessage());
                 Toast.makeText(this, "Failed to fetch your car ID.", Toast.LENGTH_SHORT).show();
             });
         }
     }
-
 
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
         overridePendingTransition(0, 0); // Disable animations globally
     }
-
-
 }

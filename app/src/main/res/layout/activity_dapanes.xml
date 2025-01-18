@@ -1,48 +1,47 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
     <!-- App Bar -->
-
-    <!-- Card View for Total Expenses -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/appBar"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/gradient_top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/pageTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:text="Δαπάνες"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp" />
 
         <ImageView
             android:id="@+id/accountIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="Account Icon"
             android:src="@drawable/ic_account_circle"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Account Icon"
+            app:tint="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@android:color/white" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="16dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Card View for Total Expenses -->
     <androidx.cardview.widget.CardView
         android:id="@+id/totalExpensesCard"
         android:layout_width="0dp"
@@ -50,9 +49,9 @@
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBar">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,22 +63,22 @@
                 android:id="@+id/total_expenses_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="Συνολικές Δαπάνες"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:gravity="center" />
 
             <TextView
                 android:id="@+id/total_expenses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
                 android:text="$0.00"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -88,36 +87,34 @@
         android:id="@+id/buttonSection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="32dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="32dp"
+        app:layout_constraintTop_toBottomOf="@id/totalExpensesCard"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/totalExpensesCard">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageButton
+        <Button
             android:id="@+id/view_history_button"
-            android:layout_width="273dp"
-            android:layout_height="90dp"
-            android:layout_margin="32dp"
-            android:layout_marginStart="48dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@null"
-            android:elevation="4dp"
+            android:text="Ιστορικό Δαπανών Μου"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:textStyle="bold"
             android:paddingVertical="12dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/transactions_history_button_gr" />
+            android:elevation="4dp" />
 
-        <ImageButton
+        <Button
             android:id="@+id/add_expense_button"
-            android:layout_width="259dp"
-            android:layout_height="57dp"
-            android:layout_margin="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/register_new_transaction_button_gr"
-            android:elevation="4dp"
-            android:paddingVertical="12dp"
             android:text="Δήλωση Νέας Δαπάνης"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:textStyle="bold"
+            android:paddingVertical="12dp"
+            android:elevation="4dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

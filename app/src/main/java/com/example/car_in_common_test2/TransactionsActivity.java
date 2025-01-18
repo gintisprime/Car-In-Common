@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,9 +28,11 @@ import java.util.Map;
 
 public class TransactionsActivity extends BaseActivity {
 
+    private static final String TAG = "TransactionsActivity";
+
     private double totalExpenses = 0.0;
     private TextView totalExpensesView;
-    private ArrayList<String> expenseHistory;
+    private List<String> expenseHistory;
 
     // Firebase references
     private DatabaseReference databaseReference;
@@ -40,18 +41,28 @@ public class TransactionsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_dapanes, findViewById(R.id.contentFrame));
 
-        totalExpensesView = findViewById(R.id.total_expenses);
-        ImageButton addExpenseButton = findViewById(R.id.add_expense_button);
-        ImageButton viewHistoryButton = findViewById(R.id.view_history_button);
+        // Inflate the specific layout into BaseActivity's content frame
+        getLayoutInflater().inflate(R.layout.activity_dapanes, findViewById(R.id.contentFrame), true);
 
-        expenseHistory = new ArrayList<>();
-
-        // Initialize Firebase database references
+        // Initialize Firebase references
         databaseReference = FirebaseDatabase.getInstance().getReference("expenses");
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
+        // Initialize UI components
+        totalExpensesView = findViewById(R.id.total_expenses);
+        Button addExpenseButton = findViewById(R.id.add_expense_button);
+        Button viewHistoryButton = findViewById(R.id.view_history_button);
+
+        // Validate UI components to avoid null pointers
+        if (totalExpensesView == null || addExpenseButton == null || viewHistoryButton == null) {
+            throw new IllegalStateException("Failed to initialize one or more views from activity_dapanes.xml");
+        }
+
+        // Initialize expense history
+        expenseHistory = new ArrayList<>();
+
+        // Set up button listeners
         addExpenseButton.setOnClickListener(v -> showAddExpenseDialog());
         viewHistoryButton.setOnClickListener(v -> showExpenseHistoryDialog());
 
@@ -59,49 +70,72 @@ public class TransactionsActivity extends BaseActivity {
         loadExpensesFromFirebase();
     }
 
+    private void loadExpensesFromFirebase() {
+        if (databaseReference == null) {
+            Log.e(TAG, "DatabaseReference is null. Ensure Firebase is properly initialized.");
+            Toast.makeText(this, "Error: Could not connect to Firebase.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                expenseHistory.clear();
+                totalExpenses = 0.0;
+
+                for (DataSnapshot expenseSnapshot : snapshot.getChildren()) {
+                    Double amount = expenseSnapshot.child("amount").getValue(Double.class);
+                    String date = expenseSnapshot.child("date").getValue(String.class);
+                    String reason = expenseSnapshot.child("reason").getValue(String.class);
+
+                    if (amount != null && date != null && reason != null) {
+                        String expenseDetail = String.format("Amount: $%.2f, Date: %s, Reason: %s", amount, date, reason);
+                        expenseHistory.add(expenseDetail);
+                        totalExpenses += amount;
+                    }
+                }
+
+                totalExpensesView.setText(String.format("Total Expenses: $%.2f", totalExpenses));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Failed to load expenses.", error.toException());
+                Toast.makeText(TransactionsActivity.this, "Failed to load expenses.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void showExpenseHistoryDialog() {
-        // Create a dialog using a custom layout
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Expense History");
 
         if (expenseHistory.isEmpty()) {
             builder.setMessage("No expenses recorded.");
         } else {
-            // Convert the expense history list to a string array for the dialog
             String[] expenseArray = expenseHistory.toArray(new String[0]);
-
             builder.setItems(expenseArray, null);
         }
 
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.create().show();
     }
 
     private void showAddExpenseDialog() {
-        // Create a dialog using a custom layout
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.popup_add_expense, null);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.popup_add_expense, null);
         builder.setView(dialogView);
 
         AlertDialog dialog = builder.create();
 
-
-        // Set the dialog's window background to transparent to respect rounded corners
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-
-        // Find views in the custom layout
+        // Initialize dialog components
         EditText expenseAmountInput = dialogView.findViewById(R.id.expense_amount);
         EditText expenseDateInput = dialogView.findViewById(R.id.expense_date);
         Spinner expenseReasonSpinner = dialogView.findViewById(R.id.expense_reason_spinner);
         CheckBox shareExpenseCheckBox = dialogView.findViewById(R.id.share_expense_checkbox);
-        ImageButton declareExpenseButton = dialogView.findViewById(R.id.declare_expense_button);
+        Button declareExpenseButton = dialogView.findViewById(R.id.declare_expense_button);
 
-        // Populate the spinner with options
+        // Populate spinner options
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.expense_reasons,
                 android.R.layout.simple_spinner_item);
@@ -114,34 +148,25 @@ public class TransactionsActivity extends BaseActivity {
             String reasonText = expenseReasonSpinner.getSelectedItem().toString();
             boolean shareExpense = shareExpenseCheckBox.isChecked();
 
-            if (amountText.isEmpty() || dateText.isEmpty() || reasonText.isEmpty()) {
+            if (amountText.isEmpty() || dateText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             try {
                 double expenseAmount = Double.parseDouble(amountText);
-
                 if (shareExpense) {
-                    // Share the expense with users who have the same car ID
                     String carId = "your_car_id_here"; // Replace with actual car ID logic
                     findUsersWithSameCarId(carId, expenseAmount);
                 } else {
-                    // Update total expenses and UI
                     totalExpenses += expenseAmount;
                     totalExpensesView.setText(String.format("Total Expenses: $%.2f", totalExpenses));
-
-                    // Add to expense history
                     String expenseDetail = String.format("Amount: $%.2f, Date: %s, Reason: %s", expenseAmount, dateText, reasonText);
                     expenseHistory.add(expenseDetail);
-
-                    // Save to Firebase
                     saveExpenseToFirebase(expenseAmount, dateText, reasonText);
                 }
 
-                Toast.makeText(this, "Expense Added Successfully!", Toast.LENGTH_SHORT).show();
-
-                // Close the dialog
+                Toast.makeText(this, "Expense added successfully!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Invalid amount. Please enter a number.", Toast.LENGTH_SHORT).show();
@@ -152,6 +177,11 @@ public class TransactionsActivity extends BaseActivity {
     }
 
     private void saveExpenseToFirebase(double amount, String date, String reason) {
+        if (databaseReference == null) {
+            Log.e(TAG, "DatabaseReference is null. Cannot save expense.");
+            return;
+        }
+
         String key = databaseReference.push().getKey();
         if (key != null) {
             Map<String, Object> expense = new HashMap<>();
@@ -160,83 +190,38 @@ public class TransactionsActivity extends BaseActivity {
             expense.put("reason", reason);
 
             databaseReference.child(key).setValue(expense)
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Expense saved successfully."))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Failed to save expense.", e));
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Expense saved successfully."))
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to save expense.", e));
         }
-    }
-
-    private void loadExpensesFromFirebase() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                expenseHistory.clear();
-                totalExpenses = 0.0;
-
-                for (DataSnapshot expenseSnapshot : snapshot.getChildren()) {
-                    double amount = expenseSnapshot.child("amount").getValue(Double.class);
-                    String date = expenseSnapshot.child("date").getValue(String.class);
-                    String reason = expenseSnapshot.child("reason").getValue(String.class);
-
-                    if (date != null && reason != null) {
-                        String expenseDetail = String.format("Amount: $%.2f, Date: %s, Reason: %s", amount, date, reason);
-                        expenseHistory.add(expenseDetail);
-                        totalExpenses += amount;
-                    }
-                }
-
-                // Update the total expenses view
-                totalExpensesView.setText(String.format("Total Expenses: $%.2f", totalExpenses));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Failed to load expenses.", error.toException());
-            }
-        });
     }
 
     private void findUsersWithSameCarId(String carId, double sharedAmount) {
-        if (carId == null || carId.isEmpty()) {
-            Toast.makeText(this, "Car ID cannot be null or empty.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         usersRef.orderByChild("selectedCarId").equalTo(carId).get()
                 .addOnSuccessListener(snapshot -> {
                     if (snapshot.exists()) {
-                        long userCount = snapshot.getChildrenCount(); // Get the count of matching users
+                        List<String> userIds = new ArrayList<>();
+                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                            String userId = userSnapshot.getKey();
+                            if (userId != null) userIds.add(userId);
+                        }
 
-                        if (userCount > 1) {
-                            List<String> userIds = new ArrayList<>();
-                            for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                                String userId = userSnapshot.getKey();
-                                if (userId != null) {
-                                    userIds.add(userId);
-                                }
-                            }
-
-                            double amountPerUser = sharedAmount / userCount;
-
+                        if (userIds.size() > 1) {
+                            double amountPerUser = sharedAmount / userIds.size();
                             for (String userId : userIds) {
                                 notifyUser(userId, amountPerUser);
                             }
-
                             Toast.makeText(this, "Expense shared successfully!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(this, "No other users share your car ID. Total users: " + userCount, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "No other users share your car ID.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(this, "No users found with this car ID.", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("DatabaseError", "Error fetching users: " + e.getMessage());
-                    Toast.makeText(this, "Error fetching users: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Log.e(TAG, "Error finding users.", e));
     }
 
     private void notifyUser(String userId, double amount) {
-        // Notify the user of the shared expense
         DatabaseReference userNotificationsRef = usersRef.child(userId).child("notifications");
 
         Map<String, Object> notification = new HashMap<>();
@@ -244,7 +229,7 @@ public class TransactionsActivity extends BaseActivity {
         notification.put("timestamp", System.currentTimeMillis());
 
         userNotificationsRef.push().setValue(notification)
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Notification sent to user: " + userId))
-                .addOnFailureListener(e -> Log.e("Firebase", "Failed to send notification to user: " + userId, e));
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Notification sent to user: " + userId))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to send notification.", e));
     }
 }

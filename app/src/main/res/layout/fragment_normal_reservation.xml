@@ -1,0 +1,123 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Κάνε δέσμευση οχήματος:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Reason for Using the Car -->
+        <EditText
+            android:id="@+id/reasonEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Λόγος χρήσης οχήματος"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Date -->
+        <EditText
+            android:id="@+id/dateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ημερομηνία Δέσμευσης"
+            android:focusable="false"
+            android:inputType="date"/>
+
+        <!-- Start Time -->
+        <EditText
+            android:id="@+id/startTimeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ώρα έναρξης"
+            android:focusable="false"
+            android:inputType="time" />
+
+        <!-- End Time -->
+        <EditText
+            android:id="@+id/endTimeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ώρα λήξης"
+            android:focusable="false"
+            android:inputType="time" />
+
+        <!-- Importance -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Σημαντικότητα Δέσμευσης"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/importancyRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/important"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Σημαντική" />
+
+            <RadioButton
+                android:id="@+id/notimportant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Λιγότερο Σημαντική"
+                android:layout_marginStart="16dp" />
+        </RadioGroup>
+
+
+        <!-- Release Time Certain -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Είναι σίγουρη η ώρα αποδέσμευσης του οχήματος?"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/releaseCertaintyRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/radioYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ναι" />
+
+            <RadioButton
+                android:id="@+id/radioNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Όχι"
+                android:layout_marginStart="16dp" />
+        </RadioGroup>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/saveNormalReservationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Δημιουργία Δέσμευσης"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>

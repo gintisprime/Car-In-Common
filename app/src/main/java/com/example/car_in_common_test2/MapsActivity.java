@@ -1,10 +1,5 @@
 package com.example.car_in_common_test2;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,7 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -43,19 +42,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
 
-    private HashMap<Marker, String[]> markerDataMap = new HashMap<>(); // Store marker details
+    private HashMap<Marker, String[]> markerDataMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
 
-        // Firebase database reference and auth
+        // Inflate the layout into BaseActivity's content frame
+        getLayoutInflater().inflate(R.layout.activity_maps, findViewById(R.id.contentFrame), true);
+
+        // Firebase references
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // Request location permissions if not already granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission();
@@ -85,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
-                return null; // Default frame
+                return null; // Use default frame
             }
 
             @Override
@@ -129,7 +131,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (marker != null) {
                             marker.showInfoWindow();
                         }
+                    } else {
+                        Toast.makeText(this, "Unable to get location. Ensure location services are enabled.", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to get location: " + e.getMessage());
+                    Toast.makeText(this, "Failed to get location. Please try again.", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -145,19 +153,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String teamName = carDetailsSnapshot.child("teamName").getValue(String.class);
                     String carModel = carDetailsSnapshot.child("carModel").getValue(String.class);
                     String carPlate = carDetailsSnapshot.child("carPlate").getValue(String.class);
+                    Double latitude = carDetailsSnapshot.child("latitude").getValue(Double.class);
+                    Double longitude = carDetailsSnapshot.child("longitude").getValue(Double.class);
 
-                    // Mock coordinates (replace with actual data if available)
-                    double latitude = 37.9838; // Replace with actual latitude
-                    double longitude = 23.7275; // Replace with actual longitude
-
-                    // Add marker to the map
-                    if (teamName != null && carModel != null && carPlate != null) {
+                    if (teamName != null && carModel != null && carPlate != null && latitude != null && longitude != null) {
                         LatLng latLng = new LatLng(latitude, longitude);
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                 .position(latLng)
-                                .title(teamName)); // Use team name as marker title
+                                .title(teamName));
 
-                        // Store marker data
                         if (marker != null) {
                             markerDataMap.put(marker, new String[]{teamName, carModel, carPlate});
                         }
@@ -181,6 +185,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 Toast.makeText(this, "Permission denied.", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && mMap == null) {
+            initializeMap();
         }
     }
 }

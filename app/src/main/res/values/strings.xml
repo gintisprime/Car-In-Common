@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Car-In-Common Test</string>
+    <string name="expense_reason_prompt">Select a reason</string>
+    <string-array name="expense_reasons">
+        <item>Gas</item>
+        <item>Cleaning</item>
+        <item>Repairs</item>
+        <item>Insurance</item>
+    </string-array>
+    <!-- Add this entry for the duration spinner options -->
+    <string-array name="duration_options">
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
+        <item>4 hours</item>
+        <item>5 hours</item>
+    </string-array>
 </resources>

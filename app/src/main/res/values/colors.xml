@@ -5,8 +5,6 @@
     <color name="background">#D9CFCF</color> <!-- White for other areas -->
     <color name="icon_color">#000000</color> <!-- Black for icons -->
     <color name="text_color">#000000</color> <!-- Black for text -->
-<<<<<<< Updated upstream
-=======
     <color name="purple_500">#FF6200EE</color>
     <color name="nav_bar_color">#1C314A</color>
 >>>>>>> Stashed changes

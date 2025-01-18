@@ -6,7 +6,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
@@ -34,7 +33,9 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+
+        // Inflate the specific chat layout into BaseActivity's content frame
+        getLayoutInflater().inflate(R.layout.activity_chat, findViewById(R.id.contentFrame), true);
 
         // Retrieve the groupId passed from GroupChatActivity
         String groupId = getIntent().getStringExtra("groupId");

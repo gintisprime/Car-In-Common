@@ -29,7 +29,10 @@
             </intent-filter>
         </activity>
 
-        <!-- Other Activities -->
+        <!-- Declared Activities -->
+        <activity android:name=".MainMenuActivity" />
+        <activity android:name=".CalendarActivity" />
+        <activity android:name=".TransactionsActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".GroupChatActivity" />
         <activity android:name=".StartScreenActivity" />
@@ -38,14 +41,9 @@
         <activity android:name=".MapsActivity" />
         <activity android:name=".CarDetailsActivity" />
         <activity android:name=".SettingsActivity" />
-<<<<<<< Updated upstream
-        <activity android:name=".LoginActivity" />
-=======
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
->>>>>>> Stashed changes
-        <activity android:name=".MainMenuActivity" />
 
         <!-- Meta-data -->
         <meta-data

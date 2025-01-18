@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Duration Spinner -->
+    <Spinner
+        android:id="@+id/emergencyDurationSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Διάρκεια Δέσμευσης (΄Ώρες)"
+        android:importantForAccessibility="yes" />
+
+    <Button
+        android:id="@+id/emergencySaveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Δημιουργία Επείγουσας Δέσμευσης"
+        android:textColor="#fff"
+        android:background="@color/material_dynamic_primary0"
+        android:importantForAccessibility="yes"/>
+</LinearLayout>
