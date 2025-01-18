@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.calendar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.car_in_common_test2.R;
 
 import java.util.Calendar;
 

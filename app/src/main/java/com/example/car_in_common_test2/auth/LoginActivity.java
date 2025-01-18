@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.car_in_common_test2.main_menu.MainMenuActivity;
+import com.example.car_in_common_test2.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {

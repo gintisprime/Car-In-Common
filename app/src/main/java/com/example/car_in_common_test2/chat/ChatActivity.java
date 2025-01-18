@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.chat;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.car_in_common_test2.utils.BaseActivity;
+import com.example.car_in_common_test2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;

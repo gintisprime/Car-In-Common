@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.calendar;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.car_in_common_test2.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

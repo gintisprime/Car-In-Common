@@ -1,10 +1,12 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.utils;
 
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import com.example.car_in_common_test2.R;
 
 public class SettingsActivity extends AppCompatActivity {
     @Override

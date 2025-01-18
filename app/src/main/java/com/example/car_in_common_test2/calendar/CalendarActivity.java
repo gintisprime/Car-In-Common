@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.calendar;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
+import com.example.car_in_common_test2.utils.BaseActivity;
+import com.example.car_in_common_test2.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 

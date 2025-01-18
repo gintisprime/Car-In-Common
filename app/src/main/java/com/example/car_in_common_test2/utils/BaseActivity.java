@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.utils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.car_in_common_test2.main_menu.MainMenuActivity;
+import com.example.car_in_common_test2.vehicle.MapsActivity;
+import com.example.car_in_common_test2.R;
+import com.example.car_in_common_test2.transactions.TransactionsActivity;
+import com.example.car_in_common_test2.calendar.CalendarActivity;
+import com.example.car_in_common_test2.chat.ChatActivity;
+import com.example.car_in_common_test2.chat.GroupChatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

@@ -1,10 +1,13 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.utils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler; // For the delay
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.car_in_common_test2.main_menu.MainMenuActivity;
+import com.example.car_in_common_test2.R;
+import com.example.car_in_common_test2.auth.StartScreenActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {

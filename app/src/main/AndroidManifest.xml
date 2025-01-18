@@ -21,7 +21,7 @@
 
         <!-- Splash Activity (Launcher) -->
         <activity
-            android:name=".SplashActivity"
+            android:name=".utils.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,19 +30,19 @@
         </activity>
 
         <!-- Declared Activities -->
-        <activity android:name=".MainMenuActivity" />
-        <activity android:name=".CalendarActivity" />
-        <activity android:name=".TransactionsActivity" />
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".GroupChatActivity" />
-        <activity android:name=".StartScreenActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MapsActivity" />
-        <activity android:name=".CarDetailsActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".main_menu.MainMenuActivity" />
+        <activity android:name=".calendar.CalendarActivity" />
+        <activity android:name=".transactions.TransactionsActivity" />
+        <activity android:name=".chat.ChatActivity" />
+        <activity android:name=".chat.GroupChatActivity" />
+        <activity android:name=".auth.StartScreenActivity" />
+        <activity android:name=".main_menu.ProfileActivity" />
+        <activity android:name=".auth.RegisterActivity" />
+        <activity android:name=".vehicle.MapsActivity" />
+        <activity android:name=".vehicle.CarDetailsActivity" />
+        <activity android:name=".utils.SettingsActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".auth.LoginActivity"
             android:exported="true" />
 
         <!-- Meta-data -->

@@ -1,6 +1,4 @@
-package com.example.car_in_common_test2;
-
-import android.os.Bundle;
+package com.example.car_in_common_test2.vehicle;
 
 import androidx.appcompat.app.AppCompatActivity;
 

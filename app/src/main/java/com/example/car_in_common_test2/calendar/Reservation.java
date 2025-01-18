@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.calendar;
 
 public class Reservation {
     private String reason;

@@ -1,4 +1,4 @@
-package com.example.car_in_common_test2;
+package com.example.car_in_common_test2.transactions;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.car_in_common_test2.R;
+import com.example.car_in_common_test2.utils.BaseActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
