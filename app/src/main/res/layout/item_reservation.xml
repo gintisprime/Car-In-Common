@@ -29,9 +29,18 @@
         android:textSize="14sp"/>
 
     <TextView
-        android:id="@+id/importanceTextView"
+        android:id="@+id/impotanceView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Σημαντικότητα:"
         android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/typeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Τύπος Δέσμευσης: Κανονική"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
+
 </LinearLayout>

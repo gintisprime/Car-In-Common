@@ -95,20 +95,31 @@ public class NormalReservationFragment extends DialogFragment {
         String reason = reasonEditText.getText().toString();
         String startTime = startTimeEditText.getText().toString();
         String endTime = endTimeEditText.getText().toString();
+        String date = dateEditText.getText().toString();
 
-        // Ensure all fields are filled
-        if (reason.isEmpty() || startTime.isEmpty() || endTime.isEmpty() || selectedDate == null) {
+        if (reason.isEmpty() || startTime.isEmpty() || endTime.isEmpty() || date.isEmpty()) {
             Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Create the reservation object
-        Reservation newReservation = new Reservation(reason, startTime, endTime);
+        Reservation newReservation = new Reservation(reason, startTime, endTime, date, false); // Normal reservation
 
-        // Save the reservation to Firebase
-        FirebaseHelper.saveReservationToFirebase(newReservation);
+        FirebaseHelper.checkForConflictsAndSave(date, startTime, endTime, newReservation, new FirebaseHelper.OnConflictCheckCallback() {
+            @Override
+            public void onConflict() {
+                Toast.makeText(getContext(), "This time slot is already reserved. Please choose another.", Toast.LENGTH_SHORT).show();
+            }
 
-        // Close the fragment
-        dismiss();
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getContext(), "Reservation saved successfully!", Toast.LENGTH_SHORT).show();
+                dismiss(); // Close the dialog
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getContext(), "Failed to save reservation.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
