@@ -35,7 +35,7 @@
     <ImageButton
         android:id="@+id/declare_expense_button"
         android:layout_width="wrap_content"
-        android:layout_height="65dp"
+        android:layout_height="87dp"
         android:background="@null"
         android:scaleType="fitXY"
         android:src="@drawable/btn_confirm_transaction_gr"
