@@ -4,26 +4,27 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class FirebaseHelper {
 
     private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public static void saveReservationToFirebase(Reservation reservation) {
+    // Save a reservation to Firestore
+    public static void saveReservationToFirebase(Reservation reservation, FirebaseCallback callback) {
         db.collection("reservations")
                 .add(reservation)
                 .addOnSuccessListener(documentReference -> {
-                    Log.d("FirebaseHelper", "Reservation added: " + reservation.toString());
+                    Log.d("FirebaseHelper", "Η δέσμευση καταχωρήθηκε: " + documentReference.getId());
+                    callback.onSuccess(List.of(reservation));
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FirebaseHelper", "Error adding reservation", e);
+                    Log.e("FirebaseHelper", "Σφάλμα καταχώρησης δέσμευσης", e);
+                    callback.onFailure(e);
                 });
     }
 
+    // Fetch reservations for a specific date
     public static void fetchReservationsForDate(String date, FirebaseCallback callback) {
         db.collection("reservations")
                 .whereEqualTo("date", date)
@@ -32,55 +33,24 @@ public class FirebaseHelper {
                     List<Reservation> reservations = queryDocumentSnapshots.toObjects(Reservation.class);
                     callback.onSuccess(reservations);
                 })
-                .addOnFailureListener(callback::onFailure);
+                .addOnFailureListener(e -> {
+                    Log.e("FirebaseHelper", "Error fetching reservations for date: " + date, e);
+                    callback.onFailure(e);
+                });
     }
-    public static void checkForConflictsAndSave(
-            String date, String newStartTime, String newEndTime, Reservation newReservation,
-            OnConflictCheckCallback callback) {
 
+    // Fetch all reservations
+    public static void fetchAllReservations(FirebaseCallback callback) {
         db.collection("reservations")
-                .whereEqualTo("date", date)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    boolean conflictFound = false;
-
-                    for (Reservation existingReservation : queryDocumentSnapshots.toObjects(Reservation.class)) {
-                        if (timeOverlaps(existingReservation.getStartTime(), existingReservation.getEndTime(), newStartTime, newEndTime)) {
-                            conflictFound = true;
-                            break;
-                        }
-                    }
-
-                    if (conflictFound) {
-                        callback.onConflict();
-                    } else {
-                        saveReservationToFirebase(newReservation);
-                        callback.onSuccess();
-                    }
+                    List<Reservation> reservations = queryDocumentSnapshots.toObjects(Reservation.class);
+                    callback.onSuccess(reservations);
                 })
-                .addOnFailureListener(callback::onFailure);
-    }
-
-    private static boolean timeOverlaps(String existingStart, String existingEnd, String newStart, String newEnd) {
-        // Parse time strings into Date objects
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        try {
-            Date existingStartTime = timeFormat.parse(existingStart);
-            Date existingEndTime = timeFormat.parse(existingEnd);
-            Date newStartTime = timeFormat.parse(newStart);
-            Date newEndTime = timeFormat.parse(newEnd);
-
-            return (newStartTime.before(existingEndTime) && newEndTime.after(existingStartTime));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public interface OnConflictCheckCallback {
-        void onConflict();
-        void onSuccess();
-        void onFailure(Exception e);
+                .addOnFailureListener(e -> {
+                    Log.e("FirebaseHelper", "Error fetching all reservations", e);
+                    callback.onFailure(e);
+                });
     }
 
     public interface FirebaseCallback {

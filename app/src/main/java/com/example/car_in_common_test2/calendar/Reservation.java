@@ -6,16 +6,18 @@ public class Reservation {
     private String endTime;
     private String date;
     private boolean isEmergency;
+    private boolean releaseTimeCertain;
 
-    // Default constructor for Firebase
+    // Required default constructor for Firebase
     public Reservation() {}
 
-    public Reservation(String reason, String startTime, String endTime, String date, boolean isEmergency) {
+    public Reservation(String reason, String startTime, String endTime, String date, boolean isEmergency, boolean releaseTimeCertain) {
         this.reason = reason;
         this.startTime = startTime;
         this.endTime = endTime;
         this.date = date;
         this.isEmergency = isEmergency;
+        this.releaseTimeCertain = releaseTimeCertain;
     }
 
     public String getReason() {
@@ -38,14 +40,7 @@ public class Reservation {
         return isEmergency;
     }
 
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "reason='" + reason + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", date='" + date + '\'' +
-                ", isEmergency=" + isEmergency +
-                '}';
+    public boolean isReleaseTimeCertain() {
+        return releaseTimeCertain;
     }
 }

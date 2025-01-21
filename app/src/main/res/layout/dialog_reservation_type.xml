@@ -8,12 +8,14 @@
         android:id="@+id/normalReservationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Κανονική Δέσμευση" />
+        android:text="Κανονική Δέσμευση"
+        android:contentDescription="Select Normal Reservation"/>
 
     <Button
         android:id="@+id/emergencyReservationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Επείγουσα Δέσμευση"
+        android:contentDescription="Select Emergency Reservation"
         android:layout_marginTop="16dp" />
 </LinearLayout>

@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:hint="Ημερομηνία Δέσμευσης"
             android:focusable="false"
-            android:inputType="date"/>
+            android:inputType="none"/>
 
         <!-- Start Time -->
         <EditText
@@ -69,16 +69,16 @@
 
             <RadioButton
                 android:id="@+id/important"
-                android:layout_width="wrap_content"
+                android:layout_width="148dp"
                 android:layout_height="wrap_content"
                 android:text="Σημαντική" />
 
             <RadioButton
                 android:id="@+id/notimportant"
-                android:layout_width="wrap_content"
+                android:layout_width="214dp"
                 android:layout_height="wrap_content"
-                android:text="Λιγότερο Σημαντική"
-                android:layout_marginStart="16dp" />
+                android:layout_marginStart="16dp"
+                android:text="Λιγότερο Σημαντική" />
         </RadioGroup>
 
 
@@ -99,16 +99,16 @@
 
             <RadioButton
                 android:id="@+id/radioYes"
-                android:layout_width="wrap_content"
+                android:layout_width="93dp"
                 android:layout_height="wrap_content"
                 android:text="Ναι" />
 
             <RadioButton
                 android:id="@+id/radioNo"
-                android:layout_width="wrap_content"
+                android:layout_width="92dp"
                 android:layout_height="wrap_content"
-                android:text="Όχι"
-                android:layout_marginStart="16dp" />
+                android:layout_marginStart="16dp"
+                android:text="Όχι" />
         </RadioGroup>
 
         <!-- Save Button -->

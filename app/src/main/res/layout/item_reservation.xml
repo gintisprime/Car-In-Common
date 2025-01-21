@@ -7,13 +7,25 @@
     android:background="?android:attr/selectableItemBackground"
     android:layout_marginBottom="8dp">
 
+    <!-- Reservation Reason -->
     <TextView
         android:id="@+id/reasonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Σκοπός:"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:visibility="gone"/>
 
+    <!-- Date -->
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ημερομηνία:"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <!-- Start Time -->
     <TextView
         android:id="@+id/startTimeTextView"
         android:layout_width="wrap_content"
@@ -21,6 +33,7 @@
         android:text="Ώρα Έναρξης:"
         android:textSize="14sp"/>
 
+    <!-- End Time -->
     <TextView
         android:id="@+id/endTimeTextView"
         android:layout_width="wrap_content"
@@ -28,18 +41,30 @@
         android:text="Ώρα Λήξης:"
         android:textSize="14sp"/>
 
+    <!-- Importance -->
     <TextView
-        android:id="@+id/impotanceView"
+        android:id="@+id/importanceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Σημαντικότητα:"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:visibility="gone"/>
 
+    <!-- Release Time Certain -->
+    <TextView
+        android:id="@+id/releaseTimeCertainTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Σίγουρη ώρα αποδέσμευσης του οχήματος?:"
+        android:textSize="14sp"
+        android:visibility="gone"/>
+
+    <!-- Reservation Type -->
     <TextView
         android:id="@+id/typeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Τύπος Δέσμευσης: Κανονική"
+        android:text="Τύπος Δέσμευσης:"
         android:textSize="16sp"
         android:layout_marginTop="8dp" />
 

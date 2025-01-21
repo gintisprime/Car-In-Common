@@ -17,6 +17,8 @@ import com.example.car_in_common_test2.utils.BaseActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +38,6 @@ public class CalendarActivity extends BaseActivity {
         // Inflate layout into BaseActivity's content frame
         getLayoutInflater().inflate(R.layout.activity_calendar, findViewById(R.id.contentFrame), true);
 
-        // Initialize UI components
         calendarView = findViewById(R.id.calendarView);
         ImageButton addReservationButton = findViewById(R.id.addReservationButton);
         TextView selectedDateTextView = findViewById(R.id.selectedDateTextView);
@@ -47,15 +48,13 @@ public class CalendarActivity extends BaseActivity {
         reservationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         reservationsRecyclerView.setAdapter(reservationAdapter);
 
-        // Set default selected date to today's date
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         selectedDate = sdf.format(new Date());
         selectedDateTextView.setText("Reservations for: " + selectedDate);
 
-        // Fetch and display reservations
-        fetchReservations();
+        fetchReservations();        // Load reservations for today
+        fetchEventsForCalendar();   // Load all calendar events
 
-        // Handle date selection
         calendarView.setOnDayClickListener(eventDay -> {
             Date clickedDate = eventDay.getCalendar().getTime();
             selectedDate = sdf.format(clickedDate);
@@ -63,7 +62,6 @@ public class CalendarActivity extends BaseActivity {
             fetchReservations();
         });
 
-        // Add a new reservation
         addReservationButton.setOnClickListener(v -> showReservationOptions());
     }
 
@@ -72,43 +70,90 @@ public class CalendarActivity extends BaseActivity {
             @Override
             public void onSuccess(List<Reservation> reservations) {
                 reservationList.clear();
+
+                // Sort reservations by date and time (latest first)
+                Collections.sort(reservations, (r1, r2) -> {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+                        Date date1 = sdf.parse(r1.getDate() + " " + r1.getStartTime());
+                        Date date2 = sdf.parse(r2.getDate() + " " + r2.getStartTime());
+                        return date2.compareTo(date1);
+                    } catch (Exception e) {
+                        Log.e("CalendarActivity", "Error parsing reservation date", e);
+                        return 0;
+                    }
+                });
+
                 reservationList.addAll(reservations);
-                reservationAdapter.notifyDataSetChanged();
-                Log.d("CalendarActivity", "Fetched reservations: " + reservations);
+                reservationAdapter.notifyDataSetChanged(); // Refresh RecyclerView
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("CalendarActivity", "Error fetching reservations", e);
-                Toast.makeText(CalendarActivity.this, "Error fetching reservations.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CalendarActivity.this, "Error fetching reservations: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void fetchEventsForCalendar() {
+        FirebaseHelper.fetchAllReservations(new FirebaseHelper.FirebaseCallback() {
+            @Override
+            public void onSuccess(List<Reservation> reservations) {
+                List<EventDay> events = new ArrayList<>();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+                for (Reservation reservation : reservations) {
+                    try {
+                        Date parsedDate = sdf.parse(reservation.getDate());
+                        Calendar calendar = Calendar.getInstance();
+                        if (parsedDate != null) {
+                            calendar.setTime(parsedDate);
+                            int dotDrawable = reservation.isEmergency() ? R.drawable.red_dot : R.drawable.green_dot;
+                            events.add(new EventDay(calendar, dotDrawable));
+                        }
+                    } catch (Exception e) {
+                        Log.e("CalendarActivity", "Error parsing reservation date", e);
+                    }
+                }
+
+                calendarView.setEvents(events);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(CalendarActivity.this, "Error fetching calendar events.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void showReservationOptions() {
-        // Create a dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose Reservation Type");
 
-        // Options: Normal or Emergency
-        String[] options = {"Normal Reservation", "Emergency Reservation"};
+        String[] options = {"Κανονική Δέσμευση", "Δέσμευση έκτακτης ανάγκης"};
         builder.setItems(options, (dialog, which) -> {
             switch (which) {
-                case 0: // Normal Reservation
+                case 0:
                     NormalReservationFragment normalFragment = new NormalReservationFragment();
                     normalFragment.setSelectedDate(selectedDate);
+                    normalFragment.setOnReservationSavedListener(this::onReservationSaved);
                     normalFragment.show(getSupportFragmentManager(), "NormalReservationFragment");
                     break;
-
-                case 1: // Emergency Reservation
+                case 1:
                     EmergencyReservationFragment emergencyFragment = new EmergencyReservationFragment();
                     emergencyFragment.setSelectedDate(selectedDate);
+                    emergencyFragment.setOnReservationSavedListener(this::onReservationSaved);
                     emergencyFragment.show(getSupportFragmentManager(), "EmergencyReservationFragment");
                     break;
             }
         });
 
-        // Display the dialog
         builder.create().show();
+    }
+
+    private void onReservationSaved() {
+        fetchReservations();        // Refresh the reservations list
+        fetchEventsForCalendar();   // Refresh the calendar dots
     }
 }
