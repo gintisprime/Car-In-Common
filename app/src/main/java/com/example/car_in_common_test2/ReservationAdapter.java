@@ -8,11 +8,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.car_in_common_test2.R;
+
 import java.util.List;
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
-    private List<Reservation> reservationList;
+    private final List<Reservation> reservationList;
 
     public ReservationAdapter(List<Reservation> reservationList) {
         this.reservationList = reservationList;
@@ -28,9 +30,18 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     @Override
     public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
         Reservation reservation = reservationList.get(position);
-        holder.reasonTextView.setText("Reason: " + reservation.getReason());
+
+        if (reservation.isEmergency()) {
+            holder.reasonTextView.setText("Type: Emergency");
+        } else {
+            holder.reasonTextView.setText("Reason: " + reservation.getReason());
+        }
+
         holder.startTimeTextView.setText("Start Time: " + reservation.getStartTime());
         holder.endTimeTextView.setText("End Time: " + reservation.getEndTime());
+
+        String importanceText = reservation.isImportant() ? "Important" : "Not Important";
+        holder.importanceTextView.setText("Importance: " + importanceText);
     }
 
     @Override
@@ -38,14 +49,18 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         return reservationList.size();
     }
 
-    public static class ReservationViewHolder extends RecyclerView.ViewHolder {
-        TextView reasonTextView, startTimeTextView, endTimeTextView;
+    public void updateReservations(List<Reservation> filteredReservations) {
+    }
 
-        public ReservationViewHolder(View itemView) {
+    static class ReservationViewHolder extends RecyclerView.ViewHolder {
+        TextView reasonTextView, startTimeTextView, endTimeTextView, importanceTextView;
+
+        public ReservationViewHolder(@NonNull View itemView) {
             super(itemView);
             reasonTextView = itemView.findViewById(R.id.reasonTextView);
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
             endTimeTextView = itemView.findViewById(R.id.endTimeTextView);
+            importanceTextView = itemView.findViewById(R.id.impotanceView);
         }
     }
 }

@@ -1,92 +1,62 @@
 package com.example.car_in_common_test2;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.car_in_common_test2.R;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class NormalReservationFragment extends DialogFragment {
 
-    private EditText startTimeEditText, endTimeEditText;
-    private EditText dateEditText;
-    private EditText reasonEditText;
-    private Button saveReservationButton;
-
+    private EditText dateEditText, startTimeEditText, endTimeEditText, reasonEditText;
     private String selectedDate;
-
-    public void setSelectedDate(String selectedDate) {
-        this.selectedDate = selectedDate;
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_normal_reservation, container, false);
 
+        dateEditText = view.findViewById(R.id.dateEditText);
         startTimeEditText = view.findViewById(R.id.startTimeEditText);
         endTimeEditText = view.findViewById(R.id.endTimeEditText);
         reasonEditText = view.findViewById(R.id.reasonEditText);
-        saveReservationButton = view.findViewById(R.id.saveNormalReservationButton);
-        dateEditText = view.findViewById(R.id.dateEditText);
+        Button saveButton = view.findViewById(R.id.saveNormalReservationButton);
 
-        // Set current date as default (if no date selected)
-        if (selectedDate != null) {
-            dateEditText.setText(selectedDate);
-        }
+        // Set current date as default
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        selectedDate = sdf.format(calendar.getTime());
+        dateEditText.setText(selectedDate);
 
-        // DatePicker for Date selection
-        dateEditText.setOnClickListener(v -> showDatePickerDialog());
+        // Open DatePicker when clicking the date field
+        dateEditText.setOnClickListener(v -> showDatePickerDialog(calendar));
 
-        // TimePicker for Start Time
-        startTimeEditText.setOnClickListener(v -> showTimePickerDialog(startTimeEditText));
-
-        // TimePicker for End Time
-        endTimeEditText.setOnClickListener(v -> showTimePickerDialog(endTimeEditText));
-
-        // Save the reservation
-        saveReservationButton.setOnClickListener(v -> saveReservation());
+        // Implement save button functionality
+        saveButton.setOnClickListener(v -> saveReservation());
 
         return view;
     }
 
-    private void showTimePickerDialog(EditText timeEditText) {
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), (TimePicker view, int hourOfDay, int minuteOfHour) -> {
-            String time = String.format("%02d:%02d", hourOfDay, minuteOfHour);
-            timeEditText.setText(time);
-        }, hour, minute, true);
-
-        timePickerDialog.show();
-    }
-
-    private void showDatePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, yearSelected, monthOfYear, dayOfMonth) -> {
-            // Format the selected date as dd-MM-yyyy
-            String date = String.format("%02d-%02d-%04d", dayOfMonth, monthOfYear + 1, yearSelected);
-            dateEditText.setText(date);
-        }, year, month, day);
-
-        datePickerDialog.show();
+    private void showDatePickerDialog(Calendar calendar) {
+        new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+            calendar.set(year, month, dayOfMonth);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            selectedDate = sdf.format(calendar.getTime());
+            dateEditText.setText(selectedDate);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     private void saveReservation() {
@@ -94,19 +64,32 @@ public class NormalReservationFragment extends DialogFragment {
         String startTime = startTimeEditText.getText().toString();
         String endTime = endTimeEditText.getText().toString();
 
-        // Ensure all fields are filled
-        if (reason.isEmpty() || startTime.isEmpty() || endTime.isEmpty() || selectedDate == null) {
-            Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        if (reason.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
+            Toast.makeText(getContext(), "All fields are required.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Create the reservation object
-        Reservation newReservation = new Reservation(reason, startTime, endTime);
+        Reservation newReservation = new Reservation(reason, startTime, endTime, selectedDate, false, false);
+        FirebaseHelper.checkForConflictsAndSave(selectedDate, startTime, endTime, newReservation, new FirebaseHelper.OnConflictCheckCallback() {
+            @Override
+            public void onConflict() {
+                Toast.makeText(getContext(), "Έχει καταχωρηθεί ήδη δέσμευση για αυτή την ώρα.", Toast.LENGTH_SHORT).show();
+            }
 
-        // Save the reservation to Firebase
-        FirebaseHelper.saveReservationToFirebase(newReservation);
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getContext(), "Η δέσμευση καταχωρήθηκε επιτυχώς!", Toast.LENGTH_SHORT).show();
+            }
 
-        // Close the fragment
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getContext(), "Αποτυχία καταχώρησης δέσμευσης. Προσπάσθησε ξανά!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         dismiss();
+    }
+
+    public void setSelectedDate(String selectedDate) {
     }
 }

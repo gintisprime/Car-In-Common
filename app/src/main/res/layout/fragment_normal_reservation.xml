@@ -1,12 +1,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
         <!-- Title -->
         <TextView
@@ -23,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Λόγος χρήσης οχήματος"
+            android:inputType="text"
             android:layout_marginBottom="16dp" />
 
         <!-- Date -->
@@ -32,7 +34,9 @@
             android:layout_height="wrap_content"
             android:hint="Ημερομηνία Δέσμευσης"
             android:focusable="false"
-            android:inputType="date"/>
+            android:inputType="none"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:layout_marginBottom="16dp" />
 
         <!-- Start Time -->
         <EditText
@@ -41,7 +45,9 @@
             android:layout_height="wrap_content"
             android:hint="Ώρα έναρξης"
             android:focusable="false"
-            android:inputType="time" />
+            android:inputType="none"
+            android:drawableEnd="@drawable/ic_clock"
+            android:layout_marginBottom="16dp" />
 
         <!-- End Time -->
         <EditText
@@ -50,7 +56,9 @@
             android:layout_height="wrap_content"
             android:hint="Ώρα λήξης"
             android:focusable="false"
-            android:inputType="time" />
+            android:inputType="none"
+            android:drawableEnd="@drawable/ic_clock"
+            android:layout_marginBottom="16dp" />
 
         <!-- Importance -->
         <TextView
@@ -80,7 +88,6 @@
                 android:text="Λιγότερο Σημαντική"
                 android:layout_marginStart="16dp" />
         </RadioGroup>
-
 
         <!-- Release Time Certain -->
         <TextView
@@ -117,6 +124,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Δημιουργία Δέσμευσης"
+            android:backgroundTint="@color/common_google_signin_btn_text_light"
+            android:textColor="@android:color/white"
             android:layout_marginTop="16dp" />
 
     </LinearLayout>
