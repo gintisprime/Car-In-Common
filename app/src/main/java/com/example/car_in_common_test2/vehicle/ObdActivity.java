@@ -1,6 +1,8 @@
 package com.example.car_in_common_test2.vehicle;
 
+import android.os.Handler;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +22,12 @@ public class ObdActivity extends AppCompatActivity {
     }
 
     private Socket socket;
+    private ImageView fuelNeedle; // Reference to the needle ImageView
+    private final Handler uiHandler = new Handler();
+
+    public void setFuelNeedle(ImageView fuelNeedle) {
+        this.fuelNeedle = fuelNeedle;
+    }
 
     public void fetchFuelLevel(FuelLevelListener listener) {
         new Thread(() -> {
@@ -56,22 +64,45 @@ public class ObdActivity extends AppCompatActivity {
                 String fuelLevelResult = fuelLevelCommand.getFormattedResult();
                 Log.d("OBD", "Fuel Level: " + fuelLevelResult);
 
+                // Update the fuel needle on the UI
+                double fuelLevel = fuelLevelCommand.getFuelLevelPercentage();
+                uiHandler.post(() -> updateFuelNeedle(fuelLevel));
+
                 // Pass the fuel level back via the listener
                 listener.onFuelLevelReceived(fuelLevelResult);
             } catch (Exception e) {
                 Log.e("OBD", "Error communicating with OBD adapter: " + e.getMessage(), e);
                 listener.onError("Error: " + e.getMessage());
             } finally {
-                if (socket != null) {
-                    try {
-                        socket.close();
-                        Log.d("OBD", "Socket closed successfully.");
-                    } catch (Exception e) {
-                        Log.e("OBD", "Error closing socket: " + e.getMessage(), e);
-                    }
-                }
+                closeSocket();
             }
         }).start();
+    }
+
+    private void updateFuelNeedle(double fuelLevelPercentage) {
+        if (fuelNeedle == null) {
+            Log.e("OBD", "Fuel needle ImageView is not set.");
+            return;
+        }
+
+        // Calculate the rotation angle (-90° for 0%, 90° for 100%)
+        float rotationAngle = (float) ( (fuelLevelPercentage * 1.8));
+        fuelNeedle.setRotation(rotationAngle);
+
+        Log.d("OBD", String.format("Updated fuel needle to %.2f%% (rotation: %.2f°)", fuelLevelPercentage, rotationAngle));
+    }
+
+    private void closeSocket() {
+        if (socket != null) {
+            try {
+                if (!socket.isClosed()) {
+                    socket.close();
+                }
+                Log.d("OBD", "Socket closed successfully.");
+            } catch (Exception e) {
+                Log.e("OBD", "Error closing socket: " + e.getMessage(), e);
+            }
+        }
     }
 
     public static class CustomFuelLevelCommand extends ObdCommand {
@@ -100,6 +131,10 @@ public class ObdActivity extends AppCompatActivity {
                 Log.e("OBD", "Invalid raw result: " + rawResult);
                 fuelLevelPercentage = 0.0;
             }
+        }
+
+        public double getFuelLevelPercentage() {
+            return fuelLevelPercentage;
         }
 
         @Override
