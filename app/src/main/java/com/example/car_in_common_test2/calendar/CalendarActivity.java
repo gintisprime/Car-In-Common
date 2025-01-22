@@ -62,7 +62,7 @@ public class CalendarActivity extends BaseActivity {
 
         // Initialize RecyclerView
         reservationList = new ArrayList<>();
-        reservationAdapter = new ReservationAdapter(reservationList);
+        reservationAdapter = new ReservationAdapter(reservationList, this::fetchEventsForCalendar); // Add callback
         reservationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         reservationsRecyclerView.setAdapter(reservationAdapter);
 
@@ -73,6 +73,7 @@ public class CalendarActivity extends BaseActivity {
         // Add reservation button click listener
         addReservationButton.setOnClickListener(v -> showReservationOptions());
     }
+
 
     private void loadInitialData() {
         fetchReservations();
@@ -94,8 +95,8 @@ public class CalendarActivity extends BaseActivity {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e(TAG, "Error fetching reservations", e);
-                Toast.makeText(CalendarActivity.this, "Failed to fetch reservations.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Failed to fetch reservations", e);
+                Toast.makeText(CalendarActivity.this, "Αποτυχία ανάκτησης δεσμεύσεων.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -115,8 +116,8 @@ public class CalendarActivity extends BaseActivity {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e(TAG, "Error fetching calendar events", e);
-                Toast.makeText(CalendarActivity.this, "Failed to fetch calendar events.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Failed to fetch calendar events", e);
+                Toast.makeText(CalendarActivity.this, "Αποτυχία ανάκτησης δεσμεύσεων ημερολογίου.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -135,13 +136,28 @@ public class CalendarActivity extends BaseActivity {
                 if (date != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(date);
-                    int dotDrawable = reservation.isEmergency() ? R.drawable.red_dot : R.drawable.green_dot;
+
+                    // Use if condition to set the dot color
+                    int dotDrawable;
+                    if (reservation.isEmergency()) {
+                        dotDrawable = R.drawable.red_dot; // Emergency reservation
+                    } else {
+                        dotDrawable = R.drawable.green_dot; // Normal reservation
+                    }
+
                     events.add(new EventDay(calendar, dotDrawable));
+
+                    // Debugging: Verify the isEmergency flag and dot color
+                    Log.d(TAG, "Date: " + reservation.getDate() +
+                            " | Type: " + (reservation.isEmergency() ? "Emergency" : "Normal") +
+                            " | Dot Color: " + (reservation.isEmergency() ? "Red" : "Green"));
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error parsing reservation date", e);
             }
         }
+
+        // Apply the events to the calendar
         calendarView.setEvents(events);
     }
 
@@ -192,9 +208,9 @@ public class CalendarActivity extends BaseActivity {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
                 Date date1 = sdf.parse(r1.getDate() + " " + r1.getStartTime());
                 Date date2 = sdf.parse(r2.getDate() + " " + r2.getStartTime());
-                return date2.compareTo(date1);
+                return date2.compareTo(date1); // Sort latest first
             } catch (Exception e) {
-                Log.e(TAG, "Error sorting reservations", e);
+                Log.e(TAG, "Failed to sort reservations", e);
                 return 0;
             }
         });

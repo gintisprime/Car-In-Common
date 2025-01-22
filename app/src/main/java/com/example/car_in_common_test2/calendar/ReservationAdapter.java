@@ -19,11 +19,12 @@ import java.util.List;
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
     private final List<Reservation> reservationList;
+    private final Runnable onReservationDeleted; // Callback to notify the calendar to update dots
 
-    public ReservationAdapter(List<Reservation> reservationList) {
-        this.reservationList = (reservationList != null) ? reservationList : new ArrayList<>();
+    public ReservationAdapter(List<Reservation> reservationList, Runnable onReservationDeleted) {
+        this.reservationList = reservationList != null ? reservationList : new ArrayList<>();
+        this.onReservationDeleted = onReservationDeleted;
     }
-
 
     @NonNull
     @Override
@@ -33,18 +34,24 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReservationViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
         Reservation reservation = reservationList.get(position);
 
+        // Always show these common details
         holder.dateTextView.setText("Ημερομηνία: " + reservation.getDate());
         holder.startTimeTextView.setText("Ώρα Έναρξης: " + reservation.getStartTime());
         holder.endTimeTextView.setText("Ώρα Λήξης: " + reservation.getEndTime());
-        holder.typeTextView.setText(reservation.isEmergency() ? "Τύπος Δέσμευσης: Επείγουσα" : "Τύπος Δέσμευσης: Κανονική");
+        holder.typeTextView.setText(reservation.isEmergency()
+                ? "Τύπος Δέσμευσης: Έκτακτης Ανάγκης"
+                : "Τύπος Δέσμευσης: Κανονική");
 
+        // Show/Hide Normal Reservation Details
         if (reservation.isEmergency()) {
+            // Hide specific details for emergency reservations
             holder.reasonTextView.setVisibility(View.GONE);
             holder.releaseTimeCertainTextView.setVisibility(View.GONE);
         } else {
+            // Show all details for normal reservations
             holder.reasonTextView.setVisibility(View.VISIBLE);
             holder.reasonTextView.setText("Σκοπός: " + reservation.getReason());
             holder.releaseTimeCertainTextView.setVisibility(View.VISIBLE);
@@ -52,20 +59,26 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
                     (reservation.isReleaseTimeCertain() ? "Ναι" : "Όχι"));
         }
 
-        holder.deleteButton.setOnClickListener(v -> {
-            FirebaseHelper.deleteReservationFromFirebase(reservation.getId(), new FirebaseHelper.FirebaseCallback() {
-                @Override
-                public void onSuccess(Object result) {
-                    reservationList.remove(position);
-                    notifyItemRemoved(position);
-                    Toast.makeText(holder.itemView.getContext(), "Η δέσμευση διαγράφηκε επιτυχώς!", Toast.LENGTH_SHORT).show();
-                }
+        // Handle Delete Button Click
+        holder.deleteButton.setOnClickListener(v -> deleteReservation(holder, position, reservation));
+    }
 
-                @Override
-                public void onFailure(Exception e) {
-                    Toast.makeText(holder.itemView.getContext(), "Αποτυχία διαγραφής δέσμευσης.", Toast.LENGTH_SHORT).show();
+    private void deleteReservation(ReservationViewHolder holder, int position, Reservation reservation) {
+        FirebaseHelper.deleteReservationFromFirebase(reservation.getId(), new FirebaseHelper.FirebaseCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                reservationList.remove(position);
+                notifyItemRemoved(position);
+                Toast.makeText(holder.itemView.getContext(), "Η δέσμευση διαγράφηκε επιτυχώς!", Toast.LENGTH_SHORT).show();
+                if (onReservationDeleted != null) {
+                    onReservationDeleted.run(); // Notify CalendarActivity to update dots
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(holder.itemView.getContext(), "Αποτυχία διαγραφής δέσμευσης.", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

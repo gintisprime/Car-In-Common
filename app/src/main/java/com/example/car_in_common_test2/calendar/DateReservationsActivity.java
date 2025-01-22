@@ -36,13 +36,17 @@ public class DateReservationsActivity extends AppCompatActivity {
         dateTextView.setText("Reservations for " + selectedDate);
 
         reservations = new ArrayList<>();
-        adapter = new ReservationAdapter(reservations);
+
+        // Pass a no-op Runnable since no calendar updates are needed
+        adapter = new ReservationAdapter(reservations, () -> {});
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("reservations");
         fetchReservations(selectedDate);
     }
+
 
     private void fetchReservations(String date) {
         databaseReference.addValueEventListener(new ValueEventListener() {
