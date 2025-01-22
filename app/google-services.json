@@ -1,8 +1,9 @@
 {
-    "project_info": {
+  "project_info": {
     "project_number": "237091127653",
+    "firebase_url": "https://car-in-common-default-rtdb.firebaseio.com",
     "project_id": "car-in-common",
-    "storage_bucket": "car-in-common.appspot.com"
+    "storage_bucket": "car-in-common.firebasestorage.app"
   },
   "client": [
     {
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC602DrojXA3B88z3mfUSzkKITp7di1y6c"
+          "current_key": "AIzaSyA_yp_vLl-TY4mcPuQrkhztFxOhIMNVa88"
         }
       ],
       "services": {

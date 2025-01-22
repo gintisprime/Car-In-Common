@@ -2,59 +2,109 @@ package com.example.car_in_common_test2.calendar;
 
 import android.util.Log;
 
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.annotation.NonNull;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FirebaseHelper {
 
-    private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("reservations");
 
-    // Save a reservation to Firestore
     public static void saveReservationToFirebase(Reservation reservation, FirebaseCallback callback) {
-        db.collection("reservations")
-                .add(reservation)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d("FirebaseHelper", "Η δέσμευση καταχωρήθηκε: " + documentReference.getId());
-                    callback.onSuccess(List.of(reservation));
+        String key = dbRef.push().getKey(); // Generate unique ID
+        if (key == null) {
+            callback.onFailure(new Exception("Failed to generate Firebase key"));
+            return;
+        }
+
+        // Map reservation object to Firebase
+        Map<String, Object> reservationData = new HashMap<>();
+        reservationData.put("id", key);
+        reservationData.put("reason", reservation.getReason());
+        reservationData.put("startTime", reservation.getStartTime());
+        reservationData.put("endTime", reservation.getEndTime());
+        reservationData.put("date", reservation.getDate());
+        reservationData.put("isEmergency", reservation.isEmergency());
+        reservationData.put("releaseTimeCertain", reservation.isReleaseTimeCertain());
+
+        dbRef.child(key)
+                .setValue(reservationData)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("FirebaseHelper", "Reservation saved successfully!");
+                    callback.onSuccess(null);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FirebaseHelper", "Σφάλμα καταχώρησης δέσμευσης", e);
+                    Log.e("FirebaseHelper", "Failed to save reservation", e);
                     callback.onFailure(e);
                 });
     }
-
-    // Fetch reservations for a specific date
-    public static void fetchReservationsForDate(String date, FirebaseCallback callback) {
-        db.collection("reservations")
-                .whereEqualTo("date", date)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Reservation> reservations = queryDocumentSnapshots.toObjects(Reservation.class);
-                    callback.onSuccess(reservations);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("FirebaseHelper", "Error fetching reservations for date: " + date, e);
-                    callback.onFailure(e);
-                });
-    }
-
-    // Fetch all reservations
     public static void fetchAllReservations(FirebaseCallback callback) {
-        db.collection("reservations")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Reservation> reservations = queryDocumentSnapshots.toObjects(Reservation.class);
-                    callback.onSuccess(reservations);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Reservation> reservations = new ArrayList<>();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Reservation reservation = data.getValue(Reservation.class);
+                    if (reservation != null) {
+                        reservations.add(reservation);
+                    }
+                }
+                callback.onSuccess(reservations); // Return the list of reservations
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onFailure(error.toException());
+            }
+        });
+    }
+
+    public static void fetchReservationsForDate(String date, FirebaseCallback callback) {
+        dbRef.orderByChild("date").equalTo(date)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<Reservation> reservations = new ArrayList<>();
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Reservation reservation = data.getValue(Reservation.class);
+                            if (reservation != null) {
+                                reservation.setId(data.getKey()); // Assign Firebase ID
+                                reservations.add(reservation);
+                            }
+                        }
+                        callback.onSuccess(reservations);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        callback.onFailure(error.toException());
+                    }
+                });
+    }
+
+    public static void deleteReservationFromFirebase(String reservationId, FirebaseCallback callback) {
+        dbRef.child(reservationId).removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("FirebaseHelper", "Reservation deleted successfully!");
+                    callback.onSuccess(null);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FirebaseHelper", "Error fetching all reservations", e);
+                    Log.e("FirebaseHelper", "Failed to delete reservation", e);
                     callback.onFailure(e);
                 });
     }
 
     public interface FirebaseCallback {
-        void onSuccess(List<Reservation> reservations);
+        void onSuccess(Object result);
         void onFailure(Exception e);
     }
 }

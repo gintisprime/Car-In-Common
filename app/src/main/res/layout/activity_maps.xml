@@ -10,34 +10,34 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/userInfoContainer"
+        app:layout_constraintBottom_toTopOf="@+id/reservationInfoContainer"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <!-- Bottom User Info -->
+    <!-- Reservation Info -->
     <LinearLayout
-        android:id="@+id/userInfoContainer"
+        android:id="@+id/reservationInfoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
         android:background="@android:color/white"
-        android:orientation="horizontal"
-        android:padding="64dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/lastReservationLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Γιάννης"
+            android:text="Τελευταία Δέσμευση:"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
-            android:id="@+id/userTime"
-            android:layout_width="wrap_content"
+            android:id="@+id/lastReservationDetails"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="09:00 - 12:00"
-            android:textSize="14sp" />
+            android:text="Δεν υπάρχουν δέσμευσεις"
+            android:textSize="14sp"
+            android:visibility="gone" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,71 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="?android:attr/selectableItemBackground"
+    android:padding="16dp"
     android:layout_marginBottom="8dp">
 
-    <!-- Reservation Reason -->
-    <TextView
-        android:id="@+id/reasonTextView"
-        android:layout_width="wrap_content"
+    <!-- Reservation Details -->
+    <LinearLayout
+        android:id="@+id/reservationDetailsContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Σκοπός:"
-        android:textSize="14sp"
-        android:visibility="gone"/>
+        android:orientation="vertical"
+        android:paddingEnd="48dp">
 
-    <!-- Date -->
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ημερομηνία:"
-        android:textSize="14sp"
-        android:visibility="gone" />
+        <!-- Date -->
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ημερομηνία:"
+            android:textSize="14sp" />
 
-    <!-- Start Time -->
-    <TextView
-        android:id="@+id/startTimeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ώρα Έναρξης:"
-        android:textSize="14sp"/>
+        <!-- Start Time -->
+        <TextView
+            android:id="@+id/startTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ώρα Έναρξης:"
+            android:textSize="14sp" />
 
-    <!-- End Time -->
-    <TextView
-        android:id="@+id/endTimeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ώρα Λήξης:"
-        android:textSize="14sp"/>
+        <!-- End Time -->
+        <TextView
+            android:id="@+id/endTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ώρα Λήξης:"
+            android:textSize="14sp" />
 
-    <!-- Importance -->
-    <TextView
-        android:id="@+id/importanceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Σημαντικότητα:"
-        android:textSize="14sp"
-        android:visibility="gone"/>
+        <!-- Reservation Type -->
+        <TextView
+            android:id="@+id/typeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Τύπος Δέσμευσης:"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
 
-    <!-- Release Time Certain -->
-    <TextView
-        android:id="@+id/releaseTimeCertainTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Σίγουρη ώρα αποδέσμευσης του οχήματος?:"
-        android:textSize="14sp"
-        android:visibility="gone"/>
+        <!-- Reason (only for normal reservations) -->
+        <TextView
+            android:id="@+id/reasonTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Σκοπός:"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
-    <!-- Reservation Type -->
-    <TextView
-        android:id="@+id/typeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Τύπος Δέσμευσης:"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        <!-- Release Time Certainty (only for normal reservations) -->
+        <TextView
+            android:id="@+id/releaseTimeCertainTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Σίγουρη ώρα αποδέσμευσης:"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </LinearLayout>
 
-</LinearLayout>
+    <!-- Delete Icon -->
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Διαγραφή"
+        android:src="@drawable/ic_delete"/>
+</RelativeLayout>

@@ -17,7 +17,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.car_in_common_test2.R;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -43,11 +42,16 @@ public class NormalReservationFragment extends DialogFragment {
         EditText dateEditText = view.findViewById(R.id.dateEditText);
         EditText startTimeEditText = view.findViewById(R.id.startTimeEditText);
         EditText endTimeEditText = view.findViewById(R.id.endTimeEditText);
+        RadioGroup releaseCertaintyRadioGroup = view.findViewById(R.id.releaseCertaintyRadioGroup);
         Button saveButton = view.findViewById(R.id.saveNormalReservationButton);
 
+        // Set the selected date in the date field
         dateEditText.setText(selectedDate);
 
+        // Date picker
         dateEditText.setOnClickListener(v -> showDatePickerDialog(dateEditText));
+
+        // Time pickers for start and end time
         startTimeEditText.setOnClickListener(v -> showTimePickerDialog(startTimeEditText));
         endTimeEditText.setOnClickListener(v -> showTimePickerDialog(endTimeEditText));
 
@@ -56,22 +60,19 @@ public class NormalReservationFragment extends DialogFragment {
             String date = dateEditText.getText().toString();
             String startTime = startTimeEditText.getText().toString();
             String endTime = endTimeEditText.getText().toString();
+            boolean releaseTimeCertain = releaseCertaintyRadioGroup.getCheckedRadioButtonId() == R.id.radioYes;
 
             if (reason.isEmpty() || date.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
                 Toast.makeText(getContext(), "Συμπληρώστε όλα τα πεδία.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            RadioGroup releaseCertaintyRadioGroup = view.findViewById(R.id.releaseCertaintyRadioGroup);
-            boolean releaseTimeCertain = releaseCertaintyRadioGroup.getCheckedRadioButtonId() == R.id.radioYes;
-
-            Reservation normalReservation = new Reservation(reason, startTime, endTime, selectedDate, false, releaseTimeCertain);
-
+            Reservation normalReservation = new Reservation(reason, startTime, endTime, date, false, releaseTimeCertain);
 
             FirebaseHelper.saveReservationToFirebase(normalReservation, new FirebaseHelper.FirebaseCallback() {
                 @Override
-                public void onSuccess(java.util.List<Reservation> reservations) {
-                    Toast.makeText(getContext(), "Η δέσμευση καταχωρήθηκε επιτυχώς!", Toast.LENGTH_SHORT).show();
+                public void onSuccess(Object result) {
+                    Toast.makeText(getContext(), "Επιτυχής καταχώρηση δέσμευσης!", Toast.LENGTH_SHORT).show();
                     if (onReservationSavedListener != null) {
                         onReservationSavedListener.onSaved();
                     }
@@ -80,7 +81,7 @@ public class NormalReservationFragment extends DialogFragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(getContext(), "Αποτυχία καταχώρησης δέσμευσης. Προσπαθήστε ξανά!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Αποτυχία καταχώρησης δέσμευσης. Προσπαθήστε ξανά.", Toast.LENGTH_SHORT).show();
                 }
             });
         });

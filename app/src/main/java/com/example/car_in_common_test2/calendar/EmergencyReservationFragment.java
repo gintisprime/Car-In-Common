@@ -54,20 +54,17 @@ public class EmergencyReservationFragment extends DialogFragment {
             calendar.add(Calendar.HOUR, selectedDuration);
             String endTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.getTime());
 
-            // Pass "false" for releaseTimeCertain as it's irrelevant for emergencies
             Reservation emergencyReservation = new Reservation(
                     "Emergency Reservation", startTime, endTime, selectedDate, true, false
             );
 
             FirebaseHelper.saveReservationToFirebase(emergencyReservation, new FirebaseHelper.FirebaseCallback() {
                 @Override
-                public void onSuccess(java.util.List<Reservation> reservations) {
+                public void onSuccess(Object result) {
                     Toast.makeText(getContext(), "Emergency reservation saved successfully!", Toast.LENGTH_SHORT).show();
-
                     if (onReservationSavedListener != null) {
                         onReservationSavedListener.onSaved();
                     }
-
                     dismiss();
                 }
 

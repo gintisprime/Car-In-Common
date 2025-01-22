@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.car_in_common_test2.R;
+import com.example.car_in_common_test2.calendar.Reservation;
 import com.example.car_in_common_test2.utils.BaseActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -24,14 +25,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -41,7 +44,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     private static final String TAG = "MapsActivity";
 
     private DatabaseReference databaseReference;
-    private FirebaseAuth mAuth;
+    private DatabaseReference reservationsRef;
+
+    private TextView lastReservationLabel;
+    private TextView lastReservationDetails;
 
     private HashMap<Marker, String[]> markerDataMap = new HashMap<>();
 
@@ -53,8 +59,12 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         getLayoutInflater().inflate(R.layout.activity_maps, findViewById(R.id.contentFrame), true);
 
         // Firebase references
-        mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        reservationsRef = FirebaseDatabase.getInstance().getReference("reservations");
+
+        // Initialize views
+        lastReservationLabel = findViewById(R.id.lastReservationLabel);
+        lastReservationDetails = findViewById(R.id.lastReservationDetails);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -65,6 +75,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         } else {
             initializeMap();
         }
+
+        // Fetch and display last reservation details
+        fetchLastReservationDetails();
     }
 
     private void requestLocationPermission() {
@@ -119,6 +132,16 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     private void fetchAndShowUserLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         fusedLocationProviderClient.getLastLocation()
                 .addOnSuccessListener(location -> {
                     if (location != null) {
@@ -150,7 +173,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     DataSnapshot carDetailsSnapshot = userSnapshot.child("carDetails");
 
-                    // Retrieve car details
                     String teamName = carDetailsSnapshot.child("teamName").getValue(String.class);
                     String carModel = carDetailsSnapshot.child("carModel").getValue(String.class);
                     String carPlate = carDetailsSnapshot.child("carPlate").getValue(String.class);
@@ -178,8 +200,51 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         });
     }
 
+    private void fetchLastReservationDetails() {
+        String today = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        reservationsRef.orderByChild("date").equalTo(today)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Reservation lastReservation = null;
+
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Reservation reservation = data.getValue(Reservation.class);
+                            if (reservation != null) {
+                                String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+                                if (reservation.getEndTime().compareTo(currentTime) > 0) {
+                                    if (lastReservation == null || reservation.getEndTime().compareTo(lastReservation.getEndTime()) < 0) {
+                                        lastReservation = reservation;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (lastReservation != null) {
+                            lastReservationLabel.setVisibility(View.VISIBLE);
+                            lastReservationDetails.setVisibility(View.VISIBLE);
+                            String details = "Ημερομηνία: " + lastReservation.getDate() + "\n" +
+                                    "Ώρα: " + lastReservation.getStartTime() + " - " + lastReservation.getEndTime() + "\n" +
+                                    "Τύπος: " + (lastReservation.isEmergency() ? "Επείγουσα" : "Κανονική");
+                            lastReservationDetails.setText(details);
+                        } else {
+                            lastReservationLabel.setVisibility(View.GONE);
+                            lastReservationDetails.setVisibility(View.VISIBLE);
+                            lastReservationDetails.setText("Δεν υπάρχουν δέσμευσεις για σήμερα.");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "Error fetching reservations: " + error.getMessage());
+                        Toast.makeText(MapsActivity.this, "Σφάλμα φόρτωσης δέσμευσης", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initializeMap();
