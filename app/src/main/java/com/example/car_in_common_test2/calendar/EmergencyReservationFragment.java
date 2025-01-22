@@ -47,6 +47,11 @@ public class EmergencyReservationFragment extends DialogFragment {
         durationSpinner.setAdapter(adapter);
 
         saveButton.setOnClickListener(v -> {
+            if (!FirebaseHelper.isAuthenticated()) {
+                Toast.makeText(getContext(), "Παρακαλώ συνδεθείτε για να κάνετε δέσμευση.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             int selectedDuration = durationSpinner.getSelectedItemPosition() + 1;
 
             String startTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
@@ -54,14 +59,19 @@ public class EmergencyReservationFragment extends DialogFragment {
             calendar.add(Calendar.HOUR, selectedDuration);
             String endTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.getTime());
 
-            Reservation emergencyReservation = new Reservation(
-                    "Emergency Reservation", startTime, endTime, selectedDate, true, false
-            );
+            Reservation emergencyReservation = new Reservation();
+            emergencyReservation.setReason("Emergency Reservation");
+            emergencyReservation.setStartTime(startTime);
+            emergencyReservation.setEndTime(endTime);
+            emergencyReservation.setDate(selectedDate);
+            emergencyReservation.setEmergency(true);
+            emergencyReservation.setReleaseTimeCertain(false); // Not applicable for emergency reservations
+
 
             FirebaseHelper.saveReservationToFirebase(emergencyReservation, new FirebaseHelper.FirebaseCallback() {
                 @Override
                 public void onSuccess(Object result) {
-                    Toast.makeText(getContext(), "Emergency reservation saved successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Η δέσμευση έκτακτης ανάγκης καταχωρήθηκε επιτυχώς!", Toast.LENGTH_SHORT).show();
                     if (onReservationSavedListener != null) {
                         onReservationSavedListener.onSaved();
                     }
@@ -70,11 +80,10 @@ public class EmergencyReservationFragment extends DialogFragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(getContext(), "Failed to save reservation. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Αποτυχία καταχώρησης δέσμευσης έκτακτης ανάγκης . Παρακαλώ προσπαθήστε πάλι.", Toast.LENGTH_SHORT).show();
                 }
             });
         });
-
         return view;
     }
 

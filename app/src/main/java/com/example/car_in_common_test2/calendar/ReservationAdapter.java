@@ -1,5 +1,6 @@
 package com.example.car_in_common_test2.calendar;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReservationViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Reservation reservation = reservationList.get(position);
 
         holder.dateTextView.setText("Ημερομηνία: " + reservation.getDate());

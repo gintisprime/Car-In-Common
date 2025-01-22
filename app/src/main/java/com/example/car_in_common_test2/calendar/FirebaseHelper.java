@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,15 +19,25 @@ import java.util.Map;
 public class FirebaseHelper {
 
     private static final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("reservations");
+    private static final FirebaseAuth auth = FirebaseAuth.getInstance();
+
+    // Check if user is authenticated
+    public static boolean isAuthenticated() {
+        return auth.getCurrentUser() != null;
+    }
 
     public static void saveReservationToFirebase(Reservation reservation, FirebaseCallback callback) {
-        String key = dbRef.push().getKey(); // Generate unique ID
+        if (!isAuthenticated()) {
+            callback.onFailure(new Exception("User is not authenticated."));
+            return;
+        }
+
+        String key = dbRef.push().getKey();
         if (key == null) {
             callback.onFailure(new Exception("Failed to generate Firebase key"));
             return;
         }
 
-        // Map reservation object to Firebase
         Map<String, Object> reservationData = new HashMap<>();
         reservationData.put("id", key);
         reservationData.put("reason", reservation.getReason());
@@ -38,37 +49,16 @@ public class FirebaseHelper {
 
         dbRef.child(key)
                 .setValue(reservationData)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("FirebaseHelper", "Reservation saved successfully!");
-                    callback.onSuccess(null);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("FirebaseHelper", "Failed to save reservation", e);
-                    callback.onFailure(e);
-                });
-    }
-    public static void fetchAllReservations(FirebaseCallback callback) {
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Reservation> reservations = new ArrayList<>();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    Reservation reservation = data.getValue(Reservation.class);
-                    if (reservation != null) {
-                        reservations.add(reservation);
-                    }
-                }
-                callback.onSuccess(reservations); // Return the list of reservations
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                callback.onFailure(error.toException());
-            }
-        });
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                .addOnFailureListener(callback::onFailure);
     }
 
     public static void fetchReservationsForDate(String date, FirebaseCallback callback) {
+        if (!isAuthenticated()) {
+            callback.onFailure(new Exception("User is not authenticated."));
+            return;
+        }
+
         dbRef.orderByChild("date").equalTo(date)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -77,7 +67,7 @@ public class FirebaseHelper {
                         for (DataSnapshot data : snapshot.getChildren()) {
                             Reservation reservation = data.getValue(Reservation.class);
                             if (reservation != null) {
-                                reservation.setId(data.getKey()); // Assign Firebase ID
+                                reservation.setId(data.getKey());
                                 reservations.add(reservation);
                             }
                         }
@@ -91,16 +81,41 @@ public class FirebaseHelper {
                 });
     }
 
+    public static void fetchAllReservations(FirebaseCallback callback) {
+        if (!isAuthenticated()) {
+            callback.onFailure(new Exception("User is not authenticated."));
+            return;
+        }
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Reservation> reservations = new ArrayList<>();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Reservation reservation = data.getValue(Reservation.class);
+                    if (reservation != null) {
+                        reservations.add(reservation);
+                    }
+                }
+                callback.onSuccess(reservations);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onFailure(error.toException());
+            }
+        });
+    }
+
     public static void deleteReservationFromFirebase(String reservationId, FirebaseCallback callback) {
+        if (!isAuthenticated()) {
+            callback.onFailure(new Exception("User is not authenticated."));
+            return;
+        }
+
         dbRef.child(reservationId).removeValue()
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("FirebaseHelper", "Reservation deleted successfully!");
-                    callback.onSuccess(null);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("FirebaseHelper", "Failed to delete reservation", e);
-                    callback.onFailure(e);
-                });
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                .addOnFailureListener(callback::onFailure);
     }
 
     public interface FirebaseCallback {

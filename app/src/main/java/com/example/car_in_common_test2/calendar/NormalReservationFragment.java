@@ -56,6 +56,11 @@ public class NormalReservationFragment extends DialogFragment {
         endTimeEditText.setOnClickListener(v -> showTimePickerDialog(endTimeEditText));
 
         saveButton.setOnClickListener(v -> {
+            if (!FirebaseHelper.isAuthenticated()) {
+                Toast.makeText(getContext(), "Please log in to save reservations.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String reason = reasonEditText.getText().toString();
             String date = dateEditText.getText().toString();
             String startTime = startTimeEditText.getText().toString();
@@ -67,12 +72,19 @@ public class NormalReservationFragment extends DialogFragment {
                 return;
             }
 
-            Reservation normalReservation = new Reservation(reason, startTime, endTime, date, false, releaseTimeCertain);
+            Reservation normalReservation = new Reservation();
+            normalReservation.setReason(reason);
+            normalReservation.setStartTime(startTime);
+            normalReservation.setEndTime(endTime);
+            normalReservation.setDate(date);
+            normalReservation.setEmergency(false);
+            normalReservation.setReleaseTimeCertain(releaseTimeCertain);
+
 
             FirebaseHelper.saveReservationToFirebase(normalReservation, new FirebaseHelper.FirebaseCallback() {
                 @Override
                 public void onSuccess(Object result) {
-                    Toast.makeText(getContext(), "Επιτυχής καταχώρηση δέσμευσης!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Επιτυχής καταχώρηση δέσμεσυης!", Toast.LENGTH_SHORT).show();
                     if (onReservationSavedListener != null) {
                         onReservationSavedListener.onSaved();
                     }
@@ -81,10 +93,11 @@ public class NormalReservationFragment extends DialogFragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(getContext(), "Αποτυχία καταχώρησης δέσμευσης. Προσπαθήστε ξανά.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Αποτυχία καταχώρησης δέσμευσης. Παρακαλώ προσπαθήστε ξανά.", Toast.LENGTH_SHORT).show();
                 }
             });
         });
+
 
         return view;
     }

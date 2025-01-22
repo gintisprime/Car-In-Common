@@ -9,8 +9,9 @@ public class Reservation {
     private boolean isEmergency;
     private boolean releaseTimeCertain;
 
-    // Default constructor for Firebase
-    public Reservation(String emergencyReservation, String startTime, String endTime, String selectedDate, boolean b, boolean b1) {}
+    // Default constructor required by Firebase
+    public Reservation() {
+    }
 
     public Reservation(String id, String reason, String startTime, String endTime, String date, boolean isEmergency, boolean releaseTimeCertain) {
         this.id = id;
@@ -22,14 +23,60 @@ public class Reservation {
         this.releaseTimeCertain = releaseTimeCertain;
     }
 
-    // Getters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public String getReason() { return reason; }
-    public String getStartTime() { return startTime; }
-    public String getEndTime() { return endTime; }
-    public String getDate() { return date; }
-    public boolean isEmergency() { return isEmergency; }
-    public boolean isReleaseTimeCertain() { return releaseTimeCertain; }
-}
+    // Getters and setters
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public boolean isEmergency() {
+        return isEmergency;
+    }
+
+    public void setEmergency(boolean emergency) {
+        isEmergency = emergency;
+    }
+
+    public boolean isReleaseTimeCertain() {
+        return releaseTimeCertain;
+    }
+
+    public void setReleaseTimeCertain(boolean releaseTimeCertain) {
+        this.releaseTimeCertain = releaseTimeCertain;
+    }
+}
