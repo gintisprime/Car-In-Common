@@ -83,14 +83,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:id="@+id/notification_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        tools:ignore="MissingConstraints" />
-
     <!-- Buttons Section -->
     <LinearLayout
         android:id="@+id/buttonSection"
@@ -101,6 +93,14 @@
         app:layout_constraintTop_toBottomOf="@id/totalExpensesCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/notification_container"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            tools:ignore="MissingConstraints" />
 
         <ImageButton
             android:id="@+id/add_expense_button"
